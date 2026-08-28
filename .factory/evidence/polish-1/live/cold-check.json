@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-08-28T12:06:54.708Z",
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Photo Intake Receipt — move and verify phone photos",
+      "h1": "Move phone photos to your PC, then verify",
+      "canonical": "https://phone-photo-intake.sociobot.in/",
+      "appErrors": [],
+      "externalRequests": []
+    },
+    {
+      "path": "/demo",
+      "status": 200,
+      "title": "Demo — Photo Intake Receipt",
+      "h1": "Review a finished photo transfer",
+      "canonical": "https://phone-photo-intake.sociobot.in/demo",
+      "appErrors": [],
+      "externalRequests": []
+    },
+    {
+      "path": "/?demo=1",
+      "status": 200,
+      "title": "Demo — Photo Intake Receipt",
+      "h1": "Review a finished photo transfer",
+      "canonical": "https://phone-photo-intake.sociobot.in/demo",
+      "appErrors": [],
+      "externalRequests": []
+    },
+    {
+      "path": "/privacy/",
+      "status": 200,
+      "title": "Privacy — Photo Intake Receipt",
+      "h1": "Privacy, drawn plainly",
+      "canonical": "https://phone-photo-intake.sociobot.in/privacy/",
+      "appErrors": [],
+      "externalRequests": []
+    },
+    {
+      "path": "/terms/",
+      "status": 200,
+      "title": "Terms — Photo Intake Receipt",
+      "h1": "Terms of use",
+      "canonical": "https://phone-photo-intake.sociobot.in/terms/",
+      "appErrors": [],
+      "externalRequests": []
+    },
+    {
+      "path": "/does-not-exist",
+      "status": 404,
+      "title": "Page not found — Photo Intake Receipt",
+      "h1": "Page not found",
+      "canonical": "https://phone-photo-intake.sociobot.in/404.html",
+      "appErrors": [],
+      "externalRequests": []
+    }
+  ],
+  "demoIsolation": true,
+  "offlineReload": true
+}

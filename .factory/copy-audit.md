@@ -88,3 +88,13 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 | Persistence | saved on this device; IndexedDB appears only in privacy and developer notes |
 
 The first screen reads aloud in one breath: move selected phone photos to a PC, try the completed sample, or start a real transfer.
+
+## README and catalog re-check
+
+The repaired README uses the same terms as the product: **transfer**, **sending phone**, **receiving PC**, **phone code**, **PC code**, and **selected files**. Its longest sentence has 18 words. It has no sentence over 22 words and no banned marketing word.
+
+The catalog sentence has 17 words and 99 characters:
+
+> Move phone photos to a PC, check every selected file, and keep a receipt before deleting originals.
+
+It starts with a verb, names the job, and stays below the 120-character limit.

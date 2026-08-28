@@ -1,82 +1,92 @@
 # Photo Intake Receipt — polish round 1 handoff
 
-**Work order:** `phone-photo-intake-polish-1`
+**Work order:** `phone-photo-intake-polish-1-all-findings`
 
-**Result:** PASS — no blocking review finding remains
+**Result:** PASS — all cumulative findings resolved
 
-**Review base:** `40cf93b6ef1822c41a40d8c0970e712f6b6ea6f2`
+**Candidate polished:** `5414d1e18754928ffd1c76ec6784af797033edf3`
 
-**Clean-clone verified source:** `bda8b31c0289d89a91b68ba8690e8fa3ec4f4356`
+**Review commit:** `40cf93b6ef1822c41a40d8c0970e712f6b6ea6f2`
 
-**Production URL:** <https://phone-photo-intake.sociobot.in>
+**Repair commit:** `f36f169826984693f5dbe01bd6d9353343fd7f92`
 
-**Deployment ID:** `72c01bdc-c3fa-4c8a-9185-7a47316f53ac`
+**Production:** <https://phone-photo-intake.sociobot.in>
 
-## What changed
+**Deployment ID:** `6e51d624-fc61-42e8-9be4-e2a21117297b`
 
-- Rewrote the first screen around the phone-to-PC job, named its audience, added the sample and real actions, and stated privacy, offline, and free limits.
-- Added `/demo` and `?demo=1` with a completed three-file harbour receipt, an interrupted four-part transfer, a persistent demo banner, reset, and exit controls.
-- Isolated demo state in `demo:photo-intake-receipt`; demo mode never reads the production database or license key.
-- Added `.factory/claims.json` with 17 claims. Every claim ID occurs in exactly one tagged test.
-- Added real SPA routes, route-specific titles/descriptions/canonicals/social metadata, direct-load and reload coverage, H1 focus, announcements, shared navigation/footer, and a styled 404.
-- Removed the dead paid checkout. The app now states that larger transfers are unavailable and renders no purchase action.
-- Added visible file-picker focus, 44 px header/footer targets, visible mobile navigation, no-overflow checks, and the corrected PC-code error.
-- Kept the original blueprint drafting-sheet identity and documented its demo, error-page, and social-image treatments.
-- Updated the catalog sentence, copy audit, README, demo notes, sitemap, security policy, service worker, and Capacitor project checks.
+## Delivered
 
-## Clean-clone evidence
+- Verified and retained the plain first screen, one-click `/demo` and `?demo=1` sandbox, completed/interrupted sample data, banner, reset, and start-real exit.
+- Verified separate demo storage and added a registry integrity test so every public claim has exactly one listed test tag.
+- Added the last missing product behavior: a direct connection that cannot reach its peer now ends after 20 seconds with a specific same-network recovery step.
+- Extended the same-network claim test to prove both successful direct transfer and the unreachable-peer outcome.
+- Re-verified real route titles, metadata, canonical links, History API focus, legal routes, shared structure, HTTP 404, file-picker focus, mobile targets, no overflow, offline behavior, and no dead checkout.
+- Preserved the product’s blueprint drafting-sheet identity. No generic template or third-party visual asset was introduced.
+- Updated the PWA cache/start versions, product version to 1.0.2, catalog description, copy audit, and complete finding map.
 
-Verification used `/tmp/phone-photo-intake-polish.HuL2QT`, cloned without hardlinks at `bda8b31c0289d89a91b68ba8690e8fa3ec4f4356`.
+The exhaustive finding-to-change-to-evidence record is [`.factory/polish-1.md`](polish-1.md). Screenshots and machine-readable reports are in [`.factory/evidence/polish-1/`](evidence/polish-1/).
 
-- `npm ci`: 149 packages installed; 0 vulnerabilities.
-- Every one of the 17 commands in `.factory/claims.json`: PASS when invoked separately.
-- `npm test`: 4 files and 12 tests passed.
-- `npm run build`: PASS; `dist/` produced.
-- Production assets: JS 39.51 kB raw / 13.91 kB gzip; CSS 16.33 kB raw / 4.32 kB gzip; hero 58.46 kB.
-- `npm run test:e2e`: 14 passed; 8 intentional mobile duplicates skipped. The run covered desktop and 390 × 844 mobile layouts, route reloads, focus, touch targets, axe, demo isolation, privacy, offline reload, downloads, and two-peer WebRTC.
-- Resume claim: 20 of 20 fresh interruption/reconnect runs completed; already-saved parts were not resent.
-- Playwright axe integration: zero serious or critical issues on `/`, `/demo`, `/privacy/`, `/terms/`, and the 404 in both projects.
-- Local `verify-url.sh`: title present, `lang=en`, one H1, one main, 0 missing alt attributes, 0 unlabeled buttons, and 0 console errors.
-- Local Lighthouse 12.8.2 mobile: performance 96, accessibility 100, best practices 100, SEO 100; LCP 1.7 s, CLS 0, TBT 220 ms.
-- `npx cap sync android`: PASS. The Android app ID remains `in.sociobot.phonephotointake` and uses `dist/`.
+## Clean-clone verification
 
-## Live evidence
+Clone: `/tmp/phone-photo-intake-polish-1.GPDPJH` at `f36f169826984693f5dbe01bd6d9353343fd7f92`.
 
-`/opt/fleet/lib/deploy-static.sh phone-photo-intake /work/repo/dist` reused `sf-phone-photo-intake` in `eastus2`, uploaded 374,837 bytes, and completed the deployment above.
+- `npm ci`: PASS — 149 packages, 0 vulnerabilities.
+- All 17 `.factory/claims.json` commands, invoked separately: PASS.
+- `npm test`: PASS — 5 files, 13 tests.
+- `npm run build`: PASS — `dist/` produced.
+- Build size: JS 40.08 kB raw / 14.01 kB gzip; CSS 16.33 kB raw / 4.32 kB gzip; hero 58.46 kB.
+- `npm run test:e2e`: PASS — 14 passed, 8 intentional viewport duplicates skipped.
+- Resume campaign: PASS — 20/20 fresh interruption/reconnect runs retained saved parts.
+- Desktop and 390 × 844 checks: PASS — copy, routing, focus, touch targets, mobile overflow, axe baseline, legal pages, downloads, real WebRTC transfer, privacy boundary, offline reload, and 404.
+- `npx cap sync android`: PASS.
 
-`verify-url.sh https://phone-photo-intake.sociobot.in` reported a 954 ms load, no console errors, `lang=en`, one H1, one main, no missing alt attributes, and no unlabeled buttons.
+## Accessibility, privacy, offline, and performance
 
-HTTP and metadata checks after deployment:
+- Local `verify-url.sh`: 602 ms load, zero console errors, `lang=en`, one H1, one main, no missing alt, no unlabeled buttons.
+- Local axe CLI on four product routes: zero violations.
+- Local Lighthouse: performance 100, accessibility 100, best practices 100, SEO 100; LCP 1.8 s, CLS 0, TBT 30 ms.
+- The full transfer privacy test observed only `http://127.0.0.1:4173` requests and no external script/style origin.
+- Offline claim test reloaded `/demo` under `context.setOffline(true)` and opened its seeded receipt.
+- Reduced motion, visible focus, bound labels, live errors/status, semantic landmarks, and 44 px mobile targets are covered by source and browser tests.
 
-| Route | HTTP | Title |
-| --- | ---: | --- |
-| `/` | 200 | Photo Intake Receipt — move and verify phone photos |
-| `/demo` | 200 | Demo — Photo Intake Receipt |
-| `/privacy/` | 200 | Privacy — Photo Intake Receipt |
-| `/terms/` | 200 | Terms — Photo Intake Receipt |
-| `/does-not-exist` | 404 | Page not found — Photo Intake Receipt |
-| `/robots.txt` | 200 | — |
-| `/sitemap.xml` | 200 | — |
-| `/manifest.webmanifest` | 200 | — |
+## Production verification after deployment
 
-The demo, privacy, terms, and 404 routes also exposed their matching H1 and canonical URL in a fresh 390 × 844 Chromium page.
+Cold checks used fresh 390 × 844 Chromium contexts after deployment.
 
-## Run and verify
+| Route | HTTP | Title | H1 |
+| --- | ---: | --- | --- |
+| `/` | 200 | Photo Intake Receipt — move and verify phone photos | Move phone photos to your PC, then verify |
+| `/demo` | 200 | Demo — Photo Intake Receipt | Review a finished photo transfer |
+| `/?demo=1` | 200 | Demo — Photo Intake Receipt | Review a finished photo transfer |
+| `/privacy/` | 200 | Privacy — Photo Intake Receipt | Privacy, drawn plainly |
+| `/terms/` | 200 | Terms — Photo Intake Receipt | Terms of use |
+| `/does-not-exist` | 404 | Page not found — Photo Intake Receipt | Page not found |
+
+Additional production results:
+
+- `verify-url.sh`: 951 ms, zero app console errors, one H1/main, correct language and image/button labels.
+- axe CLI: zero violations across all five route types, including the 404.
+- Lighthouse: performance 99, accessibility 100, best practices 100, SEO 100; LCP 1.3 s, CLS 0, TBT 120 ms.
+- Demo reset and **Start for real** preserved a production local-storage sentinel.
+- Offline `/demo` reload passed after service-worker control.
+- Root, metadata, sitemap, manifest, icons, social image, legal pages, and demo returned 200; unknown route returned 404.
+- CSP, Referrer-Policy, X-Content-Type-Options, COEP, COOP, and Permissions-Policy headers are live.
+- Screenshot review confirmed the blueprint identity and usable 390 px layouts: [home](evidence/polish-1/live/screenshot-mobile.png), [demo](evidence/polish-1/live/demo-mobile.png), [404](evidence/polish-1/live/404-mobile.png).
+
+## Run again
 
 ```sh
 npm ci
 npm test
 npm run build
 npm run test:e2e
-jq -r '.[] | [.id, .test] | @tsv' .factory/claims.json
+npx cap sync android
 ```
 
-For each row from the final command, run its `test` value separately from a clean clone.
+Run every `test` value in `.factory/claims.json` separately for claim verification.
 
-## Remaining scope
+## Known gaps and next steps
 
-There are no known blocking product, accessibility, claim, privacy, offline, routing, or deployment gaps.
+No known product, review, accessibility, privacy, offline, routing, claim, mobile, or deployment gap remains in this work order.
 
-This was a static PWA work order. The Capacitor project is present and synchronized, but this worker image has no Java runtime, so `./gradlew test assembleDebug` could not start. APK building, signing, and distribution remain assigned to the later Android work order, as required by the stack decision.
-
-The ₹499 product is not enabled in the Sociobot billing API. The dead checkout was removed; no paid capability or purchase claim is shown.
+The repository contains and syncs the required Capacitor Android project. The orchestrator assigned APK compilation/signing to a later Android work order; this static worker has no Java runtime or Android SDK, so no APK was built here.
