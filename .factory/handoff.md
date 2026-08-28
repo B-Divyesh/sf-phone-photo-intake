@@ -1,57 +1,64 @@
-# Photo Intake Receipt — verification 3 handoff
+# Photo Intake Receipt — adversarial review 1 handoff
 
-**Result: FAIL**
+**Work order:** `phone-photo-intake-review-1`
 
-**Candidate tested:** `dcea0e63359df93d2a8f8274b375a49dd75cbca7`
+**Result:** **FAIL**
 
-**Live URL:** `https://phone-photo-intake.sociobot.in`
+**Candidate:** `2df6d8a3a6724985594239b7279712180684a5dc`
+**Reviewed:** 2026-08-28 UTC
 
-**Verification date:** 2026-08-28 UTC
+## What was done
 
-The candidate is functionally strong and the prior deployment-only failures are repaired. Local and live peer transfer, exact deployment identity, 20-run interrupted resume behavior, PWA offline/update behavior, Android debug assembly, response policies, privacy, axe, and performance all passed. Release approval is withheld because keyboard focus disappears on the primary file chooser.
+Created `.factory/review-1.md` with the required cold mobile/desktop read, complete landing and README copy inventory with word counts and rewrites, demo/storage-isolation exercise, claims cross-check, routing/metadata/link review, accessibility checks, and severity-ordered verdict.
 
-## Release-blocking defect
+No product code was changed.
 
-`#file-input` is keyboard focusable but fully transparent. Its 3 px `:focus-visible` outline is painted on the invisible input, while the visible **Choose photos and videos** label has no `:focus-within` styling. A keyboard user loses the visible focus position at the product's primary action. This violates the explicit visible-focus requirement.
+## Verdict and blocking findings
 
-Also fix these non-blocking defects before re-verification:
+The review result is **FAIL**:
 
-- Standalone mobile wordmark/footer links are below the 44 px touch-target requirement (208 × 36, 50 × 19, and 36 × 19 px measured at a 390 px viewport).
-- Invalid text in the sender-side **Receiver code** field incorrectly reports “That sender code is invalid…”. Recovery still succeeds with a valid code.
+1. No one-click sample-data demo exists. `/demo` and `?demo=1` render the empty production app, lack the demo banner/reset/start-real controls, and read normal license and receipt storage.
+2. `.factory/claims.json` and all `@claim:*` tests are missing while the landing page and README make many observable claims.
+3. Unknown paths return HTTP 200 with the home screen instead of a designed 404.
+4. **Buy Intake Unlimited** targets a Sociobot checkout URL that returns HTTP 404.
+5. Keyboard focus on the primary file chooser is invisible because the focused input has `opacity: 0` and its visible label has no `:focus-within` treatment.
 
-## Exact evidence
+The review also records incomplete route metadata/shared structure, sub-44 px mobile link targets, dense/inconsistent terminology, two README sentences over 22 words, and an error that calls an invalid receiver code a sender code.
 
-- Clean starting checkout: candidate and `origin/main` both at `dcea0e63359df93d2a8f8274b375a49dd75cbca7`.
-- `npm ci`: pass; 150 packages audited, 0 vulnerabilities.
-- `npm run check`: pass on the final run; 11/11 Vitest tests, TypeScript/Vite production build, and Playwright 10 passed / 2 intentional duplicate-mobile skips. The suite includes 20 forced WebRTC interruption runs.
-- Independent 20-run interruption instrumentation: every transfer was stopped with 1–6 of 8 chunks persisted; every resume sent exactly the missing 2–7 chunks; minimum completed-byte reuse 100%; all 20 completed with safe receipts and zero missing/changed.
-- Production bundles: JS 34.89 kB raw / 12.72 kB gzip; CSS 13.42 kB raw / 3.72 kB gzip; hero WebP 58.46 kB.
-- `npx cap sync android`: pass.
-- `./android/gradlew -p android test assembleDebug` with JDK 21/API 35: pass, 143 tasks. Debug APK SHA-256: `1ad1dd5a207fadbc59d5924486742e4a5ba815a2aedf0aabe52fa427071230a9`; package `in.sociobot.phonephotointake`; min SDK 23, target SDK 35; debug v1/v2 signature verified.
-- Live desktop and exact 390 × 844 mobile: normal transfer, 25/26 boundary, invalid input recovery, JSON/CSV export, persistence, cancel/confirm clear, no overflow, reduced motion, offline reload, and service-worker update passed with no page/console errors.
-- Axe: zero violations on live desktop, mobile, and completed receipt. Manual keyboard testing found the file-picker focus failure that axe does not detect.
-- Live Lighthouse 12.8.2 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 1.171 s, LCP 1.396 s, CLS 0, TBT 0 ms, 78,795 bytes transferred.
-- Live and local SHA-256 matched for 12 sampled deployment artifacts, including HTML/legal routes, hashed JS/CSS/hero, icons, manifest, service worker, and offline page.
-- Live headers passed: CSP, HSTS, COOP, COEP, Permissions-Policy, Referrer-Policy, `nosniff`, immutable hashed assets, no-cache PWA control files, and correct manifest MIME.
-- Normal live operation issued no cross-origin requests. The only source-level external runtime integration is the required Sociobot billing endpoint after a user supplies a license or chooses checkout.
-- PWA controlled offline reload passed. A controlled service-worker version change displayed the update toast, reloaded, and replaced caches with `pir-v5-shell`/`pir-v5-runtime`.
+## How it was verified
 
-Full evidence and reproduction steps are in `.factory/verification-3.md`.
-
-## Re-run
+From a clean clone at the exact candidate commit:
 
 ```sh
 npm ci
-npm run check
-npx cap sync android
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
-  ANDROID_HOME=/usr/lib/android-sdk \
-  ANDROID_SDK_ROOT=/usr/lib/android-sdk \
-  ./android/gradlew -p android test assembleDebug
+npm test
+npm run build
+npm run test:e2e
 ```
 
-Then repeat keyboard focus inspection at the file picker, exact 390 px touch-target measurement, live axe/Lighthouse, offline/update behavior, and live/local SHA-256 comparison.
+Results: install passed with 0 vulnerabilities; Vitest passed 11/11; production build produced `dist/`; Playwright passed 10 tests with 2 intentional duplicate-mobile skips, including the 20-interruption resume campaign.
 
-## Remaining device-lab scope
+Live verification used fresh Chromium contexts at 390 × 844 and 1440 × 900. It included screenshots/visual inspection, console capture, same-origin request capture, offline reload, live axe, direct demo URL/storage sentinel checks, internal-link crawling, checkout GET/HEAD checks, unknown deep links, route metadata, back/focus behavior, mobile target measurement, and the receiver-code error path.
 
-No physical Android handset or emulator was available. Native compilation, unit tests, APK metadata/signature, and embedded web assets passed, but Android photo-picker behavior, back gesture/backgrounding, and a physical Android-to-PC Wi-Fi interruption should still be tested before distributing a signed release APK.
+## What passed
+
+- The first screen communicates the transfer/check/delete job and exposes a visible first action, although the audience is inferred rather than directly named.
+- The blueprint visual identity is specific, coherent, and faithful to `.factory/design.md`.
+- Fresh mobile and desktop loads had no console errors.
+- Live axe reported no serious/critical violations.
+- Same-origin file loading and hashing plus offline shell reload worked.
+- Root, Privacy, Terms, manifest, icons, robots, and sitemap URLs returned 200.
+- Unit, build, and existing E2E gates passed.
+
+## Required next verification
+
+After repair, rerun the full clean-clone gates and specifically verify:
+
+- one-click seeded `/demo`, isolated `demo:` storage, Reset, and Start for real;
+- every `.factory/claims.json` command and exact `@claim:<id>` mapping;
+- enabled Sociobot checkout;
+- designed unknown-route behavior and route-specific metadata;
+- keyboard focus on the visible file-picker surface and 44 px mobile links;
+- all copy-audit rewrites and consistent phone/PC/transfer terminology.
+
+Full evidence and concrete fixes are in `.factory/review-1.md`.
