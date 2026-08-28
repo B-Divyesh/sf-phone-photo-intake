@@ -8,6 +8,8 @@
 
 **Repair commit:** `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`
 
+**Evidence commit:** `043927d83d10f2d8f9777e83081b15c5cde9d493`
+
 **Deployment:** `6ba78f65-ed39-4072-8e72-39d3aaad4bed`
 
 **Live URL:** <https://phone-photo-intake.sociobot.in>
@@ -64,7 +66,7 @@ Every finding in `review-2.md`, `review-1.md`, and `polish-1.md` was checked aga
 
 ## Final evidence
 
-- Clean clone: `/tmp/phone-photo-intake-polish-2.sit9xq`, repair commit `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`.
+- Final clean clone: `/tmp/phone-photo-intake-polish-2-final.USISf8`, evidence commit `043927d83d10f2d8f9777e83081b15c5cde9d493`.
 - `npm ci`: 149 packages, zero vulnerabilities.
 - `npm test`: 6 files, 15 tests passed.
 - `npm run build`: passed; JS 40.08 kB raw / 14.01 kB gzip, CSS 16.33 kB raw / 4.32 kB gzip, hero 58.46 kB.

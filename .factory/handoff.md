@@ -10,6 +10,8 @@
 
 **Repair commit:** `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`
 
+**Evidence commit:** `043927d83d10f2d8f9777e83081b15c5cde9d493`
+
 **Deployment:** `6ba78f65-ed39-4072-8e72-39d3aaad4bed`
 
 **Production:** <https://phone-photo-intake.sociobot.in>
@@ -27,7 +29,7 @@ The complete finding-to-change-to-evidence matrix is [`.factory/polish-2.md`](po
 
 ## Verification
 
-Clean clone `/tmp/phone-photo-intake-polish-2.sit9xq` at `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`:
+Final clean clone `/tmp/phone-photo-intake-polish-2-final.USISf8` at `043927d83d10f2d8f9777e83081b15c5cde9d493`:
 
 - `npm ci`: PASS — 149 packages, zero vulnerabilities.
 - `npm test`: PASS — 6 files, 15 tests.
