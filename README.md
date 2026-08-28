@@ -8,12 +8,12 @@ One-click demo: <https://phone-photo-intake.sociobot.in/demo>
 
 ## What it does
 
-- Connects a sending phone and receiving PC through an encrypted direct WebRTC connection.
+- Connects the sending phone directly to the receiving PC.
 - Uses no public connection relay or photo server.
 - Sends only missing file parts after an interrupted transfer.
 - Keeps original file bytes and embedded photo details unchanged.
-- Checks both copies with SHA-256 and creates a receipt.
-- Saves progress, received files, and receipts in browser device storage.
+- Checks each received copy and creates a receipt.
+- Saves transfer progress, received files, and receipts on this device.
 - Downloads receipts as JSON or CSV and downloads received files from the PC.
 - Works offline after the first visit.
 - Supports 25 files per free transfer. File checks and receipt downloads need no license.

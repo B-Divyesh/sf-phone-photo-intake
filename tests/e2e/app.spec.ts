@@ -32,7 +32,7 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveText(route.heading);
     await expect(page.locator('header nav')).toBeAttached();
-    await expect(page.locator('footer')).toContainText(/Build 1\.0\.2/);
+    await expect(page.locator('footer')).toContainText(/Build 1\.0\.3/);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://phone-photo-intake.sociobot.in${route.path}`);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', route.title);
     await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', route.title);

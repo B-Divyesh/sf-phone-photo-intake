@@ -1,4 +1,4 @@
-# Copy audit — polish round 1
+# Copy audit — polish round 2
 
 Count method: whitespace-separated words. Hyphenated terms count as one. No item exceeds 22 words or uses a banned marketing word.
 
@@ -89,12 +89,50 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 
 The first screen reads aloud in one breath: move selected phone photos to a PC, try the completed sample, or start a real transfer.
 
-## README and catalog re-check
+## README re-check
 
-The repaired README uses the same terms as the product: **transfer**, **sending phone**, **receiving PC**, **phone code**, **PC code**, and **selected files**. Its longest sentence has 18 words. It has no sentence over 22 words and no banned marketing word.
+The repaired README uses the same terms as the product: **transfer**, **sending phone**, **receiving PC**, **phone code**, **PC code**, and **selected files**. Its longest visitor-facing sentence has 18 words. It has no sentence over 22 words and no banned marketing word.
 
-The catalog sentence has 17 words and 99 characters:
+| Section | Exact copy | Words | Result |
+| --- | --- | ---: | --- |
+| Introduction | Photo Intake Receipt helps people move selected phone photos to a PC. | 12 | Pass |
+| Introduction | It checks each received copy before deletion. | 7 | Pass |
+| What it does | Connects the sending phone directly to the receiving PC. | 9 | Pass; resolves `F-2-1` without WebRTC jargon |
+| What it does | Uses no public connection relay or photo server. | 8 | Pass |
+| What it does | Sends only missing file parts after an interrupted transfer. | 9 | Pass |
+| What it does | Keeps original file bytes and embedded photo details unchanged. | 9 | Pass |
+| What it does | Checks each received copy and creates a receipt. | 8 | Pass; resolves `F-2-1` without SHA-256 jargon |
+| What it does | Saves transfer progress, received files, and receipts on this device. | 10 | Pass; resolves `F-2-1` without storage jargon |
+| What it does | Downloads receipts as JSON or CSV and downloads received files from the PC. | 13 | Pass |
+| What it does | Works offline after the first visit. | 7 | Pass |
+| What it does | Supports 25 files per free transfer. | 7 | Pass |
+| What it does | File checks and receipt downloads need no license. | 8 | Pass |
+| Scope | A receipt covers only files selected on the sending phone. | 10 | Pass |
+| Scope | It cannot show that every phone photo was selected. | 9 | Pass |
+| Demo | The demo uses a separate database and never reads or changes real transfer data. | 14 | Pass |
+| Setup | Use Node.js 20 or newer. | 5 | Pass; developer prerequisite |
+| Setup | Run `npm run build`, then deploy the generated `dist/` directory. | 10 | Pass; developer instruction |
+| Setup | Each public product claim and its command is listed in `.factory/claims.json`. | 12 | Pass; developer instruction |
+| Android | The repository includes a Capacitor Android project for this product. | 10 | Pass; developer fact |
+| Android | Copy web changes into it with: | 6 | Pass; developer instruction |
+| Android | With Android SDK API 35 and JDK 21 installed, run: | 10 | Pass; developer instruction |
+| Android | The debug app is written to `android/app/build/outputs/apk/debug/app-debug.apk`. | 9 | Pass; developer instruction |
+| Android | The file is not committed. | 5 | Pass |
+| Android | Release signing happens during deployment. | 5 | Pass |
+| Connection | Open the app on both devices while they share a reachable network. | 12 | Pass |
+| Connection | On the sending phone, choose files and create a phone code. | 11 | Pass |
+| Connection | On the receiving PC, paste the phone code and create a PC code. | 13 | Pass |
+| Connection | Return the PC code to the phone and start the transfer. | 11 | Pass |
+| Connection | Delete only the selected originals named safe in the receipt. | 10 | Pass |
+| Privacy | The app has no analytics, tracking, external fonts, external scripts, photo server, or user accounts. | 15 | Pass |
+| Privacy | Local data controls are explained on the privacy page. | 9 | Pass |
+| Availability | Larger transfer licenses are not for sale while checkout is unavailable. | 11 | Pass |
+| Availability | The app does not show a dead purchase action. | 9 | Pass |
 
-> Move phone photos to a PC, check every selected file, and keep a receipt before deleting originals.
+## Catalog re-check
+
+The catalog sentence has 16 words and 96 characters:
+
+> Move selected phone photos to a PC, verify each copy, and keep a receipt before deleting originals.
 
 It starts with a verb, names the job, and stays below the 120-character limit.
