@@ -27,7 +27,7 @@ export class TransferSession {
   async makeOffer(manifest: BatchManifest, sourceFiles: Map<string, File>): Promise<string> {
     this.close();
     this.manifest = manifest;
-    this.files = sourceFiles;
+    this.files = new Map(sourceFiles);
     this.peer = this.makePeer();
     this.channel = this.peer.createDataChannel('photo-intake', { ordered: true });
     this.bindSender(this.channel);
@@ -63,6 +63,10 @@ export class TransferSession {
     this.channel = undefined;
     this.peer = undefined;
     this.receiptMade = false;
+    this.manifest = undefined;
+    this.files.clear();
+    this.results.clear();
+    this.pendingChunk = undefined;
   }
 
   private makePeer(): RTCPeerConnection {

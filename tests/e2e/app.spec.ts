@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test('landing page and transfer workbench are usable', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
   await expect(page).toHaveTitle(/Photo Intake Receipt/);
   await expect(page.locator('h1')).toHaveCount(1);
@@ -12,6 +15,7 @@ test('landing page and transfer workbench are usable', async ({ page }) => {
   await page.locator('#offer-input').fill('not-a-valid-code');
   await page.getByRole('button', { name: 'Create receiver code' }).click();
   await expect(page.getByRole('status').filter({ hasText: /could not|valid|character/i })).toBeVisible();
+  expect(errors).toEqual([]);
 });
 
 test('has no serious accessibility violations', async ({ page }) => {
@@ -42,17 +46,28 @@ test('transfers bytes and produces a safe-to-delete receipt', async ({ page, con
   });
   await page.getByRole('button', { name: 'Hash batch and create sender code' }).click();
   await expect(page.locator('#offer-code')).not.toHaveValue('', { timeout: 15_000 });
+  const firstOffer = await page.locator('#offer-code').inputValue();
 
   await receiver.getByRole('button', { name: /Receive photos/ }).click();
-  await receiver.locator('#offer-input').fill(await page.locator('#offer-code').inputValue());
+  await receiver.locator('#offer-input').fill(firstOffer);
   await receiver.getByRole('button', { name: 'Create receiver code' }).click();
   await expect(receiver.locator('#answer-code')).not.toHaveValue('', { timeout: 15_000 });
+  const firstAnswer = await receiver.locator('#answer-code').inputValue();
 
-  await page.locator('#answer-input').fill(await receiver.locator('#answer-code').inputValue());
+  await page.locator('#answer-input').fill(firstAnswer);
   await page.getByRole('button', { name: 'Connect and send missing chunks' }).click();
   await expect(page.getByRole('heading', { name: 'Safe to delete this selected batch' })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText('1 files', { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/IMG_0042.jpg/).first()).toBeVisible();
+
+  await page.getByRole('button', { name: 'Create fresh sender code to resume' }).click();
+  await expect.poll(() => page.locator('#offer-code').inputValue(), { timeout: 15_000 }).not.toBe(firstOffer);
+  await receiver.locator('#offer-input').fill(await page.locator('#offer-code').inputValue());
+  await receiver.getByRole('button', { name: 'Create receiver code' }).click();
+  await expect.poll(() => receiver.locator('#answer-code').inputValue(), { timeout: 15_000 }).not.toBe(firstAnswer);
+  await page.locator('#answer-input').fill(await receiver.locator('#answer-code').inputValue());
+  await page.getByRole('button', { name: 'Connect and send missing chunks' }).click();
+  await expect(receiver.locator('#progress-label')).toContainText('Resuming from verified local chunks', { timeout: 20_000 });
 });
 
 test('app shell reloads offline after first visit', async ({ page, context }) => {

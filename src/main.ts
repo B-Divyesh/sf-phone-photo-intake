@@ -129,6 +129,7 @@ function bindApp(initialUnlock: boolean): void {
     const limit = unlocked ? Infinity : 25;
     const over = selectedFiles.length > limit;
     ($('#prepare') as HTMLButtonElement).disabled = selectedFiles.length === 0 || over;
+    ($('#prepare') as HTMLButtonElement).textContent = 'Hash batch and create sender code';
     const selection = $('#selection');
     if (!selectedFiles.length) { selection.className = 'selection empty'; selection.innerHTML = '<p>No files selected yet.</p>'; return; }
     selection.className = `selection${over ? ' selection-error' : ''}`;
@@ -143,6 +144,9 @@ function bindApp(initialUnlock: boolean): void {
       const offer = await session.makeOffer(manifest, sourceFiles);
       ($('#offer-code') as HTMLTextAreaElement).value = offer;
       $('#sender-codes').hidden = false;
+      const prepare = $('#prepare') as HTMLButtonElement;
+      prepare.disabled = false;
+      prepare.textContent = 'Create fresh sender code to resume';
     } catch (error) { setStatus(error instanceof Error ? error.message : 'Could not prepare the batch.', true); ($('#prepare') as HTMLButtonElement).disabled = false; }
   });
 
@@ -188,13 +192,14 @@ async function makeManifest(files: File[], onProgress: (done: number, total: num
   const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
   let completedBytes = 0;
   const metas: IntakeFile[] = [];
-  for (const file of files) {
-    const id = (await hashText(`${file.name}\0${file.size}\0${file.lastModified}`)).slice(0, 20);
+  for (const [index, file] of files.entries()) {
     const sha256 = await hashBlob(file, (ratio) => onProgress(completedBytes + file.size * ratio, totalBytes, file.name));
+    const id = (await hashText(`${index}\0${file.name}\0${file.size}\0${file.lastModified}\0${sha256}`)).slice(0, 20);
     metas.push({ id, name: file.name, type: file.type || 'application/octet-stream', size: file.size, modified: file.lastModified, relativePath: file.webkitRelativePath || file.name, sha256, chunks: Math.ceil(file.size / CHUNK_SIZE) });
     completedBytes += file.size;
   }
-  return { id: crypto.randomUUID(), createdAt: new Date().toISOString(), sourceLabel: navigator.userAgent.includes('Android') ? 'Android device' : 'Browser device', files: metas, totalBytes };
+  const fingerprint = metas.map((file) => `${file.id}:${file.sha256}`).join('|');
+  return { id: `batch-${(await hashText(fingerprint)).slice(0, 24)}`, createdAt: new Date().toISOString(), sourceLabel: navigator.userAgent.includes('Android') ? 'Android device' : 'Browser device', files: metas, totalBytes };
 }
 
 function renderReceipt(receipt: IntakeReceipt, target: HTMLElement): void {
