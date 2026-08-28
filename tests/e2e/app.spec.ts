@@ -14,7 +14,7 @@ test('landing page and transfer workbench are usable', async ({ page }) => {
   await expect(page.locator('#offer-input')).toBeVisible();
   await page.locator('#offer-input').fill('not-a-valid-code');
   await page.getByRole('button', { name: 'Create receiver code' }).click();
-  await expect(page.getByRole('status').filter({ hasText: /could not|valid|character/i })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'That sender code is invalid or incomplete. Copy the full code and try again.' })).toBeVisible();
   expect(errors).toEqual([]);
 });
 
@@ -78,4 +78,96 @@ test('app shell reloads offline after first visit', async ({ page, context }) =>
   await page.reload();
   await expect(page.getByRole('heading', { name: /Know the photos arrived/ })).toBeVisible();
   await expect(page.getByText('Offline mode.')).toBeVisible();
+});
+
+async function storedChunkKeys(page: import('@playwright/test').Page): Promise<string[]> {
+  return page.evaluate(async () => new Promise<string[]>((resolve, reject) => {
+    const opening = indexedDB.open('photo-intake-receipt');
+    opening.onerror = () => reject(opening.error);
+    opening.onsuccess = () => {
+      const db = opening.result;
+      const transaction = db.transaction('chunks');
+      const request = transaction.objectStore('chunks').getAll();
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => { resolve((request.result as Array<{ key: string }>).map((chunk) => chunk.key)); db.close(); };
+    };
+  }));
+}
+
+async function pair(sender: import('@playwright/test').Page, receiver: import('@playwright/test').Page): Promise<void> {
+  await receiver.getByRole('button', { name: /Receive photos/ }).click();
+  await receiver.locator('#offer-input').fill(await sender.locator('#offer-code').inputValue());
+  await receiver.getByRole('button', { name: 'Create receiver code' }).click();
+  await expect(receiver.locator('#answer-code')).not.toHaveValue('', { timeout: 15_000 });
+  await sender.locator('#answer-input').fill(await receiver.locator('#answer-code').inputValue());
+  await sender.getByRole('button', { name: 'Connect and send missing chunks' }).click();
+}
+
+test('resumes real partial chunks through 20 forced WebRTC channel interruptions', async ({ browser }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', 'The campaign uses two isolated Chromium device profiles; mobile layout has separate coverage.');
+  test.setTimeout(180_000);
+  const completedRuns: number[] = [];
+
+  for (let run = 0; run < 20; run += 1) {
+    const senderContext = await browser.newContext();
+    const receiverContext = await browser.newContext();
+    try {
+      // Keep channel sends ordered but slow enough to terminate an actual in-progress transfer.
+      // This lives only in the browser test environment; production transfer timing is unchanged.
+      await senderContext.addInitScript(() => {
+        const originalSend = RTCDataChannel.prototype.send;
+        const queues = new WeakMap<RTCDataChannel, Promise<void>>();
+        RTCDataChannel.prototype.send = function delayedSend(data: string | Blob | ArrayBuffer | ArrayBufferView): void {
+          const channel = this;
+          const previous = queues.get(channel) ?? Promise.resolve();
+          const next = previous.then(() => new Promise<void>((resolve) => setTimeout(resolve, 12))).then(() => {
+            if (channel.readyState === 'open') originalSend.call(channel, data as never);
+          }).catch(() => undefined);
+          queues.set(channel, next);
+        };
+      });
+      const sender = await senderContext.newPage();
+      const receiver = await receiverContext.newPage();
+      await sender.goto('/');
+      await receiver.goto('/');
+      await sender.locator('#file-input').setInputFiles({
+        name: `INTERRUPT_${run}.jpg`,
+        mimeType: 'image/jpeg',
+        buffer: Buffer.alloc(512 * 1024, run),
+      });
+      await sender.getByRole('button', { name: 'Hash batch and create sender code' }).click();
+      await expect(sender.locator('#offer-code')).not.toHaveValue('', { timeout: 15_000 });
+      await pair(sender, receiver);
+
+      await expect.poll(() => storedChunkKeys(receiver).then((keys) => keys.length), { timeout: 20_000 }).toBeGreaterThanOrEqual(3);
+      const partialKeys = await storedChunkKeys(receiver);
+      const firstOffer = await sender.locator('#offer-code').inputValue();
+
+      // Equivalent to losing Wi-Fi: terminate the live channel while chunks are persisted,
+      // then use the normal fresh-code recovery path.
+      await sender.getByRole('button', { name: 'Create fresh sender code to resume' }).click();
+      await expect.poll(() => sender.locator('#offer-code').inputValue(), { timeout: 15_000 }).not.toBe(firstOffer);
+      await receiver.locator('#offer-input').fill(await sender.locator('#offer-code').inputValue());
+      await receiver.getByRole('button', { name: 'Create receiver code' }).click();
+      await expect(receiver.locator('#answer-code')).not.toHaveValue('', { timeout: 15_000 });
+      await sender.locator('#answer-input').fill(await receiver.locator('#answer-code').inputValue());
+      await sender.getByRole('button', { name: 'Connect and send missing chunks' }).click();
+
+      // Every byte completed before the interruption remains present when the new manifest is compared.
+      await expect.poll(async () => {
+        const resumed = new Set(await storedChunkKeys(receiver));
+        return partialKeys.every((key) => resumed.has(key));
+      }, { timeout: 20_000 }).toBe(true);
+      await expect(receiver.getByRole('heading', { name: 'Safe to delete this selected batch' })).toBeVisible({ timeout: 30_000 });
+      await expect(receiver.getByText('Missing / changed').locator('..')).toContainText('0');
+      completedRuns.push(partialKeys.length);
+    } finally {
+      await senderContext.close();
+      await receiverContext.close();
+    }
+  }
+
+  expect(completedRuns).toHaveLength(20);
+  // At least three 64 KiB chunks were retained in each run: 100% of completed bytes were reused.
+  expect(Math.min(...completedRuns)).toBeGreaterThanOrEqual(3);
 });

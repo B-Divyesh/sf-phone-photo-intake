@@ -1,4 +1,38 @@
-# Photo Intake Receipt — build handoff
+# Photo Intake Receipt — repair handoff
+
+**Repair work order:** `phone-photo-intake-repair-1`
+**Base verifier report:** `5386b592d1217df203634a78ca6574e568f728d4`
+**Deployment class:** static PWA (`dist/`), with Capacitor Android companion
+
+## Repair result
+
+- Malformed pairing codes now always show: **“That sender code is invalid or incomplete. Copy the full code and try again.”** Decoder/parser internals are not exposed. Unit and browser regressions pin that exact message.
+- The interrupted-transfer proof is now a 20-run production Chromium campaign. Each isolated source/destination profile transfers a 512 KiB file, saves at least three real 64 KiB chunks, terminates the live WebRTC data channel mid-transfer, re-pairs using the product UI, proves every saved chunk remains, and produces a SHA-256-clean safe-delete receipt. Every run reuses 100% of completed bytes (at least 192 KiB) and reports zero missing/changed files.
+- `public/staticwebapp.config.json` is deployed with `dist/`: immutable caching for hashed assets, fresh service-worker/manifest control files, `application/manifest+json`, CSP, Permissions-Policy, COOP, COEP, Referrer-Policy and `nosniff`. Unit coverage asserts every required policy.
+- Capacitor was synchronized and the Android debug APK was built and unit-tested using JDK 21 and Android SDK API 35. It is an ignored build artifact at `android/app/build/outputs/apk/debug/app-debug.apk`; SHA-256: `4076dd10f10fc497c4e7aa0c2fcd741967308ea89cf08c2c925b04b63c7751d6`.
+
+## Repair verification (2026-08-28 UTC)
+
+- `npm ci` — passed; 150 audited packages, 0 vulnerabilities.
+- `npm test` — passed: 4 files / 11 tests (hash, receipt/CSV, pairing message, deployment policy).
+- `npm run build` — passed; `dist/` includes the deployment policy. JS 34.89 kB raw / 12.72 kB gzip, CSS 13.42 kB raw / 3.72 kB gzip, hero 58.46 kB.
+- `npm run test:e2e` — passed in desktop Chromium and Pixel 5 / 390 px projects: keyboard/focus, malformed-code recovery, desktop/mobile layout, axe serious/critical, legal routes, regular peer transfer, offline reload, and the 20-run forced partial-channel interruption campaign.
+- `npx cap sync android` and `ANDROID_HOME=/opt/android-sdk ANDROID_SDK_ROOT=/opt/android-sdk ./android/gradlew -p android test assembleDebug` — passed.
+
+Run the same complete gate with:
+
+```sh
+npm ci
+npm test
+npm run build
+npm run test:e2e
+npx cap sync android
+(cd android && ./gradlew test assembleDebug)
+```
+
+Deploy `dist/` with `/opt/fleet/lib/deploy-static.sh phone-photo-intake dist`; retain `staticwebapp.config.json` rather than allowing a default configuration to replace it. Post-deploy check the live response headers/MIME type and run `/opt/fleet/lib/verify-url.sh`.
+
+## Historical pre-repair record
 
 > ## Independent verification 2 — **FAIL** (2026-08-28 UTC)
 >

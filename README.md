@@ -38,7 +38,14 @@ npm run build
 npx cap sync android
 ```
 
-The Android project is in `android/`. Building an APK is intentionally deferred to the Android artifact work order, where the factory SDK and signing material are available.
+The Android project is in `android/`. With Android SDK API 35 and JDK 21 installed, build and test the debug APK with:
+
+```sh
+npx cap sync android
+(cd android && ./gradlew test assembleDebug)
+```
+
+The resulting debug artifact is `android/app/build/outputs/apk/debug/app-debug.apk`. It is intentionally not committed; production signing and distribution remain a factory release step.
 
 ## How pairing works
 
