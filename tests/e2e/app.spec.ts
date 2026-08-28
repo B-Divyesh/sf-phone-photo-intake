@@ -32,7 +32,7 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveText(route.heading);
     await expect(page.locator('header nav')).toBeAttached();
-    await expect(page.locator('footer')).toContainText(/Build 1\.0\.1/);
+    await expect(page.locator('footer')).toContainText(/Build 1\.0\.2/);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://phone-photo-intake.sociobot.in${route.path}`);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', route.title);
     await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', route.title);
@@ -259,6 +259,28 @@ test('@claim:direct-local-transfer @claim:verified-receipt @claim:unchanged-file
     const cleared = await databaseCounts(receiver, DEMO_DB);
     expect(cleared.receipts).toBeGreaterThanOrEqual(2);
     expect(cleared.files).toBe(3);
+
+    // The same-network claim includes a useful failure state, not an endless
+    // “Connecting” message when the answering device disappears.
+    await senderContext.addInitScript(() => {
+      (window as typeof window & { __connectionTimeoutMs?: number }).__connectionTimeoutMs = 100;
+    });
+    const unreachableSender = await senderContext.newPage();
+    const unreachableReceiver = await receiverContext.newPage();
+    await unreachableSender.goto('/demo?transfer=1');
+    await unreachableReceiver.goto('/demo?transfer=1');
+    await unreachableSender.locator('#file-input').setInputFiles({ name: 'IMG_unreachable.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('unreachable-peer') });
+    await unreachableSender.getByRole('button', { name: 'Check files and create phone code' }).click();
+    await expect(unreachableSender.locator('#offer-code')).not.toHaveValue('', { timeout: 15_000 });
+    await unreachableReceiver.getByRole('button', { name: 'Receive photos' }).click();
+    await unreachableReceiver.locator('#offer-input').fill(await unreachableSender.locator('#offer-code').inputValue());
+    await unreachableReceiver.getByRole('button', { name: 'Create PC code' }).click();
+    await expect(unreachableReceiver.locator('#answer-code')).not.toHaveValue('', { timeout: 15_000 });
+    const unreachableCode = await unreachableReceiver.locator('#answer-code').inputValue();
+    await unreachableReceiver.close();
+    await unreachableSender.locator('#answer-input').fill(unreachableCode);
+    await unreachableSender.getByRole('button', { name: 'Connect and resume transfer' }).click();
+    await expect(unreachableSender.getByRole('status').filter({ hasText: 'The devices could not connect. Put them on the same network, then create fresh codes.' })).toBeVisible({ timeout: 5_000 });
   } finally { await senderContext.close(); await receiverContext.close(); }
 });
 

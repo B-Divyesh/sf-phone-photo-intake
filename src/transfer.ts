@@ -21,6 +21,7 @@ export class TransferSession {
   private receiveQueue = Promise.resolve();
   private results = new Map<string, FileResult>();
   private receiptMade = false;
+  private connectionTimer?: ReturnType<typeof setTimeout>;
 
   constructor(private callbacks: SessionCallbacks) {}
 
@@ -55,9 +56,20 @@ export class TransferSession {
     if (!this.peer) throw new Error('Create a phone code first.');
     await this.peer.setRemoteDescription(decodePairing(code, 'PC'));
     this.callbacks.onState('Connecting. Keep both screens open.');
+    const testWindow = window as typeof window & { __connectionTimeoutMs?: number };
+    const timeoutMs = testWindow.__connectionTimeoutMs ?? 20_000;
+    this.connectionTimer = setTimeout(() => {
+      this.connectionTimer = undefined;
+      if (this.peer && this.peer.connectionState !== 'connected') {
+        this.callbacks.onError('The devices could not connect. Put them on the same network, then create fresh codes.');
+        this.peer.close();
+      }
+    }, timeoutMs);
   }
 
   close(): void {
+    if (this.connectionTimer) clearTimeout(this.connectionTimer);
+    this.connectionTimer = undefined;
     this.channel?.close();
     this.peer?.close();
     this.channel = undefined;
@@ -73,9 +85,17 @@ export class TransferSession {
     const peer = new RTCPeerConnection({ iceServers: [] });
     peer.onconnectionstatechange = () => {
       const state = peer.connectionState;
-      if (state === 'connected') this.callbacks.onState('Encrypted direct connection established.');
+      if (state === 'connected') {
+        if (this.connectionTimer) clearTimeout(this.connectionTimer);
+        this.connectionTimer = undefined;
+        this.callbacks.onState('Encrypted direct connection established.');
+      }
       if (state === 'disconnected') this.callbacks.onState('Connection interrupted. Create fresh codes to resume the transfer.');
-      if (state === 'failed') this.callbacks.onError('The devices could not connect. Put them on the same network, then create fresh codes.');
+      if (state === 'failed') {
+        if (this.connectionTimer) clearTimeout(this.connectionTimer);
+        this.connectionTimer = undefined;
+        this.callbacks.onError('The devices could not connect. Put them on the same network, then create fresh codes.');
+      }
     };
     return peer;
   }

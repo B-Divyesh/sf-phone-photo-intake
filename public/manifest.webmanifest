@@ -3,7 +3,7 @@
   "short_name": "Intake Receipt",
   "description": "Transfer and verify phone photos before deleting originals.",
   "id": "/?source=pwa",
-  "start_url": "/?v=2",
+  "start_url": "/?v=3",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",

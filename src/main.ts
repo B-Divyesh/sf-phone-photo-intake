@@ -8,7 +8,7 @@ import { TransferSession } from './transfer';
 import { CHUNK_SIZE, type BatchManifest, type IntakeFile, type IntakeReceipt } from './types';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
-const BUILD_ID = '1.0.1 · repair 1';
+const BUILD_ID = '1.0.2 · polish 1';
 const ORIGIN = 'https://phone-photo-intake.sociobot.in';
 const esc = (value: string) => value.replace(/[&<>'"]/g, (char) => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' })[char]!);
 const formatBytes = (bytes: number) => new Intl.NumberFormat(undefined, { style: 'unit', unit: bytes >= 1_000_000 ? 'megabyte' : 'kilobyte', maximumFractionDigits: 1 }).format(bytes / (bytes >= 1_000_000 ? 1_000_000 : 1_000));
