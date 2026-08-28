@@ -1,4 +1,35 @@
-# Photo Intake Receipt — polish round 1 handoff
+# Photo Intake Receipt — review 2 handoff
+
+**Work order:** `phone-photo-intake-review-2`
+
+**Result:** FAIL — one minor documentation-copy finding remains (`F-2-1` in `review-2.md`). No product code was changed in this review.
+
+## Review 2 work completed
+
+- Ran a cold live-site review in fresh 390 px and desktop Chromium contexts.
+- Verified the real one-click demo, demo isolation/reset/exit, same-origin network boundary, and offline demo reload.
+- Created a fresh clone at `/tmp/phone-photo-intake-review-2`, ran `npm ci`, `npm test`, `npm run build`, every listed claim test separately, and the browser suite.
+- Checked routes, metadata, deep links, back-button focus, internal links, responsive width, 404, shared chrome, and the documented blueprint visual identity.
+- Read the prior review, polish record, and handoff; rechecked every prior finding against current live behavior and source.
+
+## Remaining work
+
+Replace the three README core-flow sentences flagged in `.factory/review-2.md` with plain-language alternatives. The registered claim tests already cover the rewritten meaning. Re-run the copy audit and the mapped claim tests after that documentation-only fix.
+
+## How to verify
+
+```sh
+npm ci
+npm test
+npm run build
+npm run test:e2e
+```
+
+Also run every `test` string in `.factory/claims.json` separately from a clean clone.
+
+---
+
+# Previous handoff: polish round 1
 
 **Work order:** `phone-photo-intake-polish-1-all-findings`
 
