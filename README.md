@@ -9,7 +9,7 @@ One-click demo: <https://phone-photo-intake.sociobot.in/demo>
 ## What it does
 
 - Connects the sending phone directly to the receiving PC.
-- Uses no public connection relay or photo server.
+- Does not route the connection or photos through a public server.
 - Sends only missing file parts after an interrupted transfer.
 - Keeps original file bytes and embedded photo details unchanged.
 - Checks each received copy and creates a receipt.

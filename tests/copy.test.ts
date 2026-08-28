@@ -9,7 +9,7 @@ describe('plain-language product copy', () => {
     expect(coreJob).toContain('Connects the sending phone directly to the receiving PC.');
     expect(coreJob).toContain('Checks each received copy and creates a receipt.');
     expect(coreJob).toContain('Saves transfer progress, received files, and receipts on this device.');
-    expect(coreJob).not.toMatch(/\b(?:WebRTC|SHA-256|IndexedDB|browser device storage)\b/i);
+    expect(coreJob).not.toMatch(/\b(?:WebRTC|SHA-256|IndexedDB|browser device storage|public connection relay)\b/i);
   });
 
   it('keeps the catalog description verb-first and within 120 characters', async () => {

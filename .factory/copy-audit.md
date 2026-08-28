@@ -98,7 +98,7 @@ The repaired README uses the same terms as the product: **transfer**, **sending 
 | Introduction | Photo Intake Receipt helps people move selected phone photos to a PC. | 12 | Pass |
 | Introduction | It checks each received copy before deletion. | 7 | Pass |
 | What it does | Connects the sending phone directly to the receiving PC. | 9 | Pass; resolves `F-2-1` without WebRTC jargon |
-| What it does | Uses no public connection relay or photo server. | 8 | Pass |
+| What it does | Does not route the connection or photos through a public server. | 11 | Pass |
 | What it does | Sends only missing file parts after an interrupted transfer. | 9 | Pass |
 | What it does | Keeps original file bytes and embedded photo details unchanged. | 9 | Pass |
 | What it does | Checks each received copy and creates a receipt. | 8 | Pass; resolves `F-2-1` without SHA-256 jargon |
@@ -131,8 +131,8 @@ The repaired README uses the same terms as the product: **transfer**, **sending 
 
 ## Catalog re-check
 
-The catalog sentence has 16 words and 96 characters:
+The catalog sentence has 17 words and 98 characters:
 
-> Move selected phone photos to a PC, verify each copy, and keep a receipt before deleting originals.
+> Move selected phone photos to a PC, check each copy, and keep a receipt before deleting originals.
 
 It starts with a verb, names the job, and stays below the 120-character limit.

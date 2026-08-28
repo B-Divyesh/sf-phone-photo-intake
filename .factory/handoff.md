@@ -1,108 +1,51 @@
-# Photo Intake Receipt — review 2 handoff
+# Photo Intake Receipt — polish round 2 handoff
 
-**Work order:** `phone-photo-intake-review-2`
-
-**Result:** FAIL — one minor documentation-copy finding remains (`F-2-1` in `review-2.md`). No product code was changed in this review.
-
-## Review 2 work completed
-
-- Ran a cold live-site review in fresh 390 px and desktop Chromium contexts.
-- Verified the real one-click demo, demo isolation/reset/exit, same-origin network boundary, and offline demo reload.
-- Created a fresh clone at `/tmp/phone-photo-intake-review-2`, ran `npm ci`, `npm test`, `npm run build`, every listed claim test separately, and the browser suite.
-- Checked routes, metadata, deep links, back-button focus, internal links, responsive width, 404, shared chrome, and the documented blueprint visual identity.
-- Read the prior review, polish record, and handoff; rechecked every prior finding against current live behavior and source.
-
-## Remaining work
-
-Replace the three README core-flow sentences flagged in `.factory/review-2.md` with plain-language alternatives. The registered claim tests already cover the rewritten meaning. Re-run the copy audit and the mapped claim tests after that documentation-only fix.
-
-## How to verify
-
-```sh
-npm ci
-npm test
-npm run build
-npm run test:e2e
-```
-
-Also run every `test` string in `.factory/claims.json` separately from a clean clone.
-
----
-
-# Previous handoff: polish round 1
-
-**Work order:** `phone-photo-intake-polish-1-all-findings`
+**Work order:** `phone-photo-intake-polish-2`
 
 **Result:** PASS — all cumulative findings resolved
 
-**Candidate polished:** `5414d1e18754928ffd1c76ec6784af797033edf3`
+**Released candidate:** `872fe83a274d46783e54a3d0b0da127078ffa550`
 
-**Review commit:** `40cf93b6ef1822c41a40d8c0970e712f6b6ea6f2`
+**Review commit:** `c6e0006c07ce4343629cb5ab364d530c68571691`
 
-**Repair commit:** `f36f169826984693f5dbe01bd6d9353343fd7f92`
+**Repair commit:** `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`
+
+**Deployment:** `6ba78f65-ed39-4072-8e72-39d3aaad4bed`
 
 **Production:** <https://phone-photo-intake.sociobot.in>
 
-**Deployment ID:** `6e51d624-fc61-42e8-9be4-e2a21117297b`
-
 ## Delivered
 
-- Verified and retained the plain first screen, one-click `/demo` and `?demo=1` sandbox, completed/interrupted sample data, banner, reset, and start-real exit.
-- Verified separate demo storage and added a registry integrity test so every public claim has exactly one listed test tag.
-- Added the last missing product behavior: a direct connection that cannot reach its peer now ends after 20 seconds with a specific same-network recovery step.
-- Extended the same-network claim test to prove both successful direct transfer and the unreachable-peer outcome.
-- Re-verified real route titles, metadata, canonical links, History API focus, legal routes, shared structure, HTTP 404, file-picker focus, mobile targets, no overflow, offline behavior, and no dead checkout.
-- Preserved the product’s blueprint drafting-sheet identity. No generic template or third-party visual asset was introduced.
-- Updated the PWA cache/start versions, product version to 1.0.2, catalog description, copy audit, and complete finding map.
+- Resolved `F-2-1` by replacing the README’s WebRTC, SHA-256, relay, and browser-storage terms with plain descriptions of the user’s job.
+- Added automated guards for the README wording and verb-first, 120-character catalog limit.
+- Updated the catalog sentence to: “Move selected phone photos to a PC, check each copy, and keep a receipt before deleting originals.”
+- Rechecked every round-1 finding and all 21 earlier claim-table findings against source, tests, and production.
+- Preserved and rechecked the one-click isolated `?demo=1` sample, banner, reset, exit, titles, metadata, real routes, focus, 404, legal links, mobile layout, and blueprint visual system.
+- Released build `1.0.3 · polish 2`, advanced the PWA cache/install version, pushed the repair, and deployed the static artifact.
 
-The exhaustive finding-to-change-to-evidence record is [`.factory/polish-1.md`](polish-1.md). Screenshots and machine-readable reports are in [`.factory/evidence/polish-1/`](evidence/polish-1/).
+The complete finding-to-change-to-evidence matrix is [`.factory/polish-2.md`](polish-2.md). Machine-readable reports and screenshots are in [`.factory/evidence/polish-2/`](evidence/polish-2/).
 
-## Clean-clone verification
+## Verification
 
-Clone: `/tmp/phone-photo-intake-polish-1.GPDPJH` at `f36f169826984693f5dbe01bd6d9353343fd7f92`.
+Clean clone `/tmp/phone-photo-intake-polish-2.sit9xq` at `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`:
 
-- `npm ci`: PASS — 149 packages, 0 vulnerabilities.
-- All 17 `.factory/claims.json` commands, invoked separately: PASS.
-- `npm test`: PASS — 5 files, 13 tests.
+- `npm ci`: PASS — 149 packages, zero vulnerabilities.
+- `npm test`: PASS — 6 files, 15 tests.
 - `npm run build`: PASS — `dist/` produced.
-- Build size: JS 40.08 kB raw / 14.01 kB gzip; CSS 16.33 kB raw / 4.32 kB gzip; hero 58.46 kB.
-- `npm run test:e2e`: PASS — 14 passed, 8 intentional viewport duplicates skipped.
+- Build: JS 40.08 kB raw / 14.01 kB gzip; CSS 16.33 kB raw / 4.32 kB gzip; hero 58.46 kB.
+- Every command in `.factory/claims.json`, invoked separately: PASS — 17/17.
+- `npm run test:e2e`: PASS — 14 passed, 8 intentional mobile duplicates skipped.
 - Resume campaign: PASS — 20/20 fresh interruption/reconnect runs retained saved parts.
-- Desktop and 390 × 844 checks: PASS — copy, routing, focus, touch targets, mobile overflow, axe baseline, legal pages, downloads, real WebRTC transfer, privacy boundary, offline reload, and 404.
 - `npx cap sync android`: PASS.
 
-## Accessibility, privacy, offline, and performance
+Local and production quality checks:
 
-- Local `verify-url.sh`: 602 ms load, zero console errors, `lang=en`, one H1, one main, no missing alt, no unlabeled buttons.
-- Local axe CLI on four product routes: zero violations.
-- Local Lighthouse: performance 100, accessibility 100, best practices 100, SEO 100; LCP 1.8 s, CLS 0, TBT 30 ms.
-- The full transfer privacy test observed only `http://127.0.0.1:4173` requests and no external script/style origin.
-- Offline claim test reloaded `/demo` under `context.setOffline(true)` and opened its seeded receipt.
-- Reduced motion, visible focus, bound labels, live errors/status, semantic landmarks, and 44 px mobile targets are covered by source and browser tests.
-
-## Production verification after deployment
-
-Cold checks used fresh 390 × 844 Chromium contexts after deployment.
-
-| Route | HTTP | Title | H1 |
-| --- | ---: | --- | --- |
-| `/` | 200 | Photo Intake Receipt — move and verify phone photos | Move phone photos to your PC, then verify |
-| `/demo` | 200 | Demo — Photo Intake Receipt | Review a finished photo transfer |
-| `/?demo=1` | 200 | Demo — Photo Intake Receipt | Review a finished photo transfer |
-| `/privacy/` | 200 | Privacy — Photo Intake Receipt | Privacy, drawn plainly |
-| `/terms/` | 200 | Terms — Photo Intake Receipt | Terms of use |
-| `/does-not-exist` | 404 | Page not found — Photo Intake Receipt | Page not found |
-
-Additional production results:
-
-- `verify-url.sh`: 951 ms, zero app console errors, one H1/main, correct language and image/button labels.
-- axe CLI: zero violations across all five route types, including the 404.
-- Lighthouse: performance 99, accessibility 100, best practices 100, SEO 100; LCP 1.3 s, CLS 0, TBT 120 ms.
-- Demo reset and **Start for real** preserved a production local-storage sentinel.
-- Offline `/demo` reload passed after service-worker control.
-- Root, metadata, sitemap, manifest, icons, social image, legal pages, and demo returned 200; unknown route returned 404.
-- CSP, Referrer-Policy, X-Content-Type-Options, COEP, COOP, and Permissions-Policy headers are live.
-- Screenshot review confirmed the blueprint identity and usable 390 px layouts: [home](evidence/polish-1/live/screenshot-mobile.png), [demo](evidence/polish-1/live/demo-mobile.png), [404](evidence/polish-1/live/404-mobile.png).
+- `verify-url.sh`: PASS locally and live; no console errors, one H1/main, `lang=en`, and complete image/button names.
+- axe CLI 4.10.3: zero violations on `/`, `/demo`, `/privacy/`, `/terms/`, and the 404, locally and live.
+- Local Lighthouse: 100 performance, 100 accessibility, 100 best practices, 100 SEO; LCP 1.7 s, CLS 0, TBT 0 ms.
+- Live Lighthouse: 100 performance, 100 accessibility, 100 best practices, 100 SEO; LCP 1.4 s, CLS 0, TBT 60 ms.
+- Live cold browser: first-screen copy, `?demo=1`, isolation/reset/exit, route statuses/titles/H1s, History focus, 44 px targets, no overflow, file-picker focus, same-origin requests, offline reload, no checkout, and real two-peer transfer all passed.
+- Security headers are live: CSP, Referrer-Policy, X-Content-Type-Options, COEP, COOP, Permissions-Policy, and HSTS.
 
 ## Run again
 
@@ -112,12 +55,13 @@ npm test
 npm run build
 npm run test:e2e
 npx cap sync android
+node scripts/verify-live.mjs https://phone-photo-intake.sociobot.in .factory/evidence/polish-2/live
 ```
 
-Run every `test` value in `.factory/claims.json` separately for claim verification.
+Run every `test` value in `.factory/claims.json` separately for the complete claim audit.
 
 ## Known gaps and next steps
 
-No known product, review, accessibility, privacy, offline, routing, claim, mobile, or deployment gap remains in this work order.
+No review, product, accessibility, privacy, offline, routing, claims, mobile, performance, or deployment gap remains.
 
-The repository contains and syncs the required Capacitor Android project. The orchestrator assigned APK compilation/signing to a later Android work order; this static worker has no Java runtime or Android SDK, so no APK was built here.
+The repository contains and syncs the required Capacitor Android project. APK compilation and signing remain assigned to the later Android work order by the stack decision; this work order remains a static PWA deployment.

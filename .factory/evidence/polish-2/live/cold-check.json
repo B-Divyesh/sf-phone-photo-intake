@@ -1,0 +1,50 @@
+{
+  "base": "https://phone-photo-intake.sociobot.in",
+  "checkedAt": "2026-08-28T13:21:00.250Z",
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Photo Intake Receipt — move and verify phone photos",
+      "heading": "Move phone photos to your PC, then verify"
+    },
+    {
+      "path": "/demo",
+      "status": 200,
+      "title": "Demo — Photo Intake Receipt",
+      "heading": "Review a finished photo transfer"
+    },
+    {
+      "path": "/privacy/",
+      "status": 200,
+      "title": "Privacy — Photo Intake Receipt",
+      "heading": "Privacy, drawn plainly"
+    },
+    {
+      "path": "/terms/",
+      "status": 200,
+      "title": "Terms — Photo Intake Receipt",
+      "heading": "Terms of use"
+    },
+    {
+      "path": "/missing-page",
+      "status": 404,
+      "title": "Page not found — Photo Intake Receipt",
+      "heading": "Page not found"
+    }
+  ],
+  "checks": {
+    "firstScreenCopyAndFacts": true,
+    "build": "1.0.3 · polish 2",
+    "demoQueryEntry": true,
+    "demoIsolationResetAndExit": true,
+    "routeFocusAndBack": true,
+    "mobileTargetsAndOverflow": true,
+    "fileChooserFocus": true,
+    "onlySameOriginRequests": true,
+    "offlineDemoReload": true,
+    "liveTwoPeerTransfer": true,
+    "noCheckoutAction": true
+  },
+  "consoleErrors": []
+}
