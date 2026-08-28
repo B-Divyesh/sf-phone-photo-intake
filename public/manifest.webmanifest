@@ -1,0 +1,17 @@
+{
+  "name": "Photo Intake Receipt",
+  "short_name": "Intake Receipt",
+  "description": "Transfer and verify phone photos before deleting originals.",
+  "id": "/?source=pwa",
+  "start_url": "/?v=1",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f0e6",
+  "theme_color": "#f4f0e6",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
