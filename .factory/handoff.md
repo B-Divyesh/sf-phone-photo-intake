@@ -1,64 +1,82 @@
-# Photo Intake Receipt — adversarial review 1 handoff
+# Photo Intake Receipt — polish round 1 handoff
 
-**Work order:** `phone-photo-intake-review-1`
+**Work order:** `phone-photo-intake-polish-1`
 
-**Result:** **FAIL**
+**Result:** PASS — no blocking review finding remains
 
-**Candidate:** `2df6d8a3a6724985594239b7279712180684a5dc`
-**Reviewed:** 2026-08-28 UTC
+**Review base:** `40cf93b6ef1822c41a40d8c0970e712f6b6ea6f2`
 
-## What was done
+**Clean-clone verified source:** `bda8b31c0289d89a91b68ba8690e8fa3ec4f4356`
 
-Created `.factory/review-1.md` with the required cold mobile/desktop read, complete landing and README copy inventory with word counts and rewrites, demo/storage-isolation exercise, claims cross-check, routing/metadata/link review, accessibility checks, and severity-ordered verdict.
+**Production URL:** <https://phone-photo-intake.sociobot.in>
 
-No product code was changed.
+**Deployment ID:** `72c01bdc-c3fa-4c8a-9185-7a47316f53ac`
 
-## Verdict and blocking findings
+## What changed
 
-The review result is **FAIL**:
+- Rewrote the first screen around the phone-to-PC job, named its audience, added the sample and real actions, and stated privacy, offline, and free limits.
+- Added `/demo` and `?demo=1` with a completed three-file harbour receipt, an interrupted four-part transfer, a persistent demo banner, reset, and exit controls.
+- Isolated demo state in `demo:photo-intake-receipt`; demo mode never reads the production database or license key.
+- Added `.factory/claims.json` with 17 claims. Every claim ID occurs in exactly one tagged test.
+- Added real SPA routes, route-specific titles/descriptions/canonicals/social metadata, direct-load and reload coverage, H1 focus, announcements, shared navigation/footer, and a styled 404.
+- Removed the dead paid checkout. The app now states that larger transfers are unavailable and renders no purchase action.
+- Added visible file-picker focus, 44 px header/footer targets, visible mobile navigation, no-overflow checks, and the corrected PC-code error.
+- Kept the original blueprint drafting-sheet identity and documented its demo, error-page, and social-image treatments.
+- Updated the catalog sentence, copy audit, README, demo notes, sitemap, security policy, service worker, and Capacitor project checks.
 
-1. No one-click sample-data demo exists. `/demo` and `?demo=1` render the empty production app, lack the demo banner/reset/start-real controls, and read normal license and receipt storage.
-2. `.factory/claims.json` and all `@claim:*` tests are missing while the landing page and README make many observable claims.
-3. Unknown paths return HTTP 200 with the home screen instead of a designed 404.
-4. **Buy Intake Unlimited** targets a Sociobot checkout URL that returns HTTP 404.
-5. Keyboard focus on the primary file chooser is invisible because the focused input has `opacity: 0` and its visible label has no `:focus-within` treatment.
+## Clean-clone evidence
 
-The review also records incomplete route metadata/shared structure, sub-44 px mobile link targets, dense/inconsistent terminology, two README sentences over 22 words, and an error that calls an invalid receiver code a sender code.
+Verification used `/tmp/phone-photo-intake-polish.HuL2QT`, cloned without hardlinks at `bda8b31c0289d89a91b68ba8690e8fa3ec4f4356`.
 
-## How it was verified
+- `npm ci`: 149 packages installed; 0 vulnerabilities.
+- Every one of the 17 commands in `.factory/claims.json`: PASS when invoked separately.
+- `npm test`: 4 files and 12 tests passed.
+- `npm run build`: PASS; `dist/` produced.
+- Production assets: JS 39.51 kB raw / 13.91 kB gzip; CSS 16.33 kB raw / 4.32 kB gzip; hero 58.46 kB.
+- `npm run test:e2e`: 14 passed; 8 intentional mobile duplicates skipped. The run covered desktop and 390 × 844 mobile layouts, route reloads, focus, touch targets, axe, demo isolation, privacy, offline reload, downloads, and two-peer WebRTC.
+- Resume claim: 20 of 20 fresh interruption/reconnect runs completed; already-saved parts were not resent.
+- Playwright axe integration: zero serious or critical issues on `/`, `/demo`, `/privacy/`, `/terms/`, and the 404 in both projects.
+- Local `verify-url.sh`: title present, `lang=en`, one H1, one main, 0 missing alt attributes, 0 unlabeled buttons, and 0 console errors.
+- Local Lighthouse 12.8.2 mobile: performance 96, accessibility 100, best practices 100, SEO 100; LCP 1.7 s, CLS 0, TBT 220 ms.
+- `npx cap sync android`: PASS. The Android app ID remains `in.sociobot.phonephotointake` and uses `dist/`.
 
-From a clean clone at the exact candidate commit:
+## Live evidence
+
+`/opt/fleet/lib/deploy-static.sh phone-photo-intake /work/repo/dist` reused `sf-phone-photo-intake` in `eastus2`, uploaded 374,837 bytes, and completed the deployment above.
+
+`verify-url.sh https://phone-photo-intake.sociobot.in` reported a 954 ms load, no console errors, `lang=en`, one H1, one main, no missing alt attributes, and no unlabeled buttons.
+
+HTTP and metadata checks after deployment:
+
+| Route | HTTP | Title |
+| --- | ---: | --- |
+| `/` | 200 | Photo Intake Receipt — move and verify phone photos |
+| `/demo` | 200 | Demo — Photo Intake Receipt |
+| `/privacy/` | 200 | Privacy — Photo Intake Receipt |
+| `/terms/` | 200 | Terms — Photo Intake Receipt |
+| `/does-not-exist` | 404 | Page not found — Photo Intake Receipt |
+| `/robots.txt` | 200 | — |
+| `/sitemap.xml` | 200 | — |
+| `/manifest.webmanifest` | 200 | — |
+
+The demo, privacy, terms, and 404 routes also exposed their matching H1 and canonical URL in a fresh 390 × 844 Chromium page.
+
+## Run and verify
 
 ```sh
 npm ci
 npm test
 npm run build
 npm run test:e2e
+jq -r '.[] | [.id, .test] | @tsv' .factory/claims.json
 ```
 
-Results: install passed with 0 vulnerabilities; Vitest passed 11/11; production build produced `dist/`; Playwright passed 10 tests with 2 intentional duplicate-mobile skips, including the 20-interruption resume campaign.
+For each row from the final command, run its `test` value separately from a clean clone.
 
-Live verification used fresh Chromium contexts at 390 × 844 and 1440 × 900. It included screenshots/visual inspection, console capture, same-origin request capture, offline reload, live axe, direct demo URL/storage sentinel checks, internal-link crawling, checkout GET/HEAD checks, unknown deep links, route metadata, back/focus behavior, mobile target measurement, and the receiver-code error path.
+## Remaining scope
 
-## What passed
+There are no known blocking product, accessibility, claim, privacy, offline, routing, or deployment gaps.
 
-- The first screen communicates the transfer/check/delete job and exposes a visible first action, although the audience is inferred rather than directly named.
-- The blueprint visual identity is specific, coherent, and faithful to `.factory/design.md`.
-- Fresh mobile and desktop loads had no console errors.
-- Live axe reported no serious/critical violations.
-- Same-origin file loading and hashing plus offline shell reload worked.
-- Root, Privacy, Terms, manifest, icons, robots, and sitemap URLs returned 200.
-- Unit, build, and existing E2E gates passed.
+This was a static PWA work order. The Capacitor project is present and synchronized, but this worker image has no Java runtime, so `./gradlew test assembleDebug` could not start. APK building, signing, and distribution remain assigned to the later Android work order, as required by the stack decision.
 
-## Required next verification
-
-After repair, rerun the full clean-clone gates and specifically verify:
-
-- one-click seeded `/demo`, isolated `demo:` storage, Reset, and Start for real;
-- every `.factory/claims.json` command and exact `@claim:<id>` mapping;
-- enabled Sociobot checkout;
-- designed unknown-route behavior and route-specific metadata;
-- keyboard focus on the visible file-picker surface and 44 px mobile links;
-- all copy-audit rewrites and consistent phone/PC/transfer terminology.
-
-Full evidence and concrete fixes are in `.factory/review-1.md`.
+The ₹499 product is not enabled in the Sociobot billing API. The dead checkout was removed; no paid capability or purchase claim is shown.
