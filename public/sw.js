@@ -1,10 +1,10 @@
-const VERSION = 'pir-v4';
+const VERSION = 'pir-v5';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
-const CORE = ['/', '/index.html', '/offline.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png', '/privacy/', '/terms/'];
+const CORE = ['/', '/index.html', '/demo', '/offline.html', '/404.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/apple-touch-icon.png', '/og-photo-intake.jpg', '/privacy/', '/terms/'];
 const GENERATED = [/*__PRECACHE__*/];
 const DEV = self.location.port === '5173'
-  ? ['/@vite/client', '/src/main.ts', '/src/style.css', '/src/hash.ts', '/src/license.ts', '/src/receipt.ts', '/src/storage.ts', '/src/transfer.ts', '/src/pairing.ts', '/src/types.ts', '/src/assets/hero-blueprint.webp']
+  ? ['/@vite/client', '/src/main.ts', '/src/style.css', '/src/demo.ts', '/src/hash.ts', '/src/receipt.ts', '/src/storage.ts', '/src/transfer.ts', '/src/pairing.ts', '/src/types.ts', '/src/assets/hero-blueprint.webp']
   : [];
 
 self.addEventListener('install', (event) => {

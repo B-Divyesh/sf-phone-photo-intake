@@ -33,7 +33,7 @@ export class TransferSession {
     this.bindSender(this.channel);
     await this.peer.setLocalDescription(await this.peer.createOffer());
     await waitForIce(this.peer);
-    this.callbacks.onState('Offer ready — move this code to the receiving device.');
+    this.callbacks.onState('Phone code ready. Move it to the receiving PC.');
     return encodePairing(this.peer.localDescription!);
   }
 
@@ -44,17 +44,17 @@ export class TransferSession {
       this.channel = event.channel;
       this.bindReceiver(event.channel);
     };
-    await this.peer.setRemoteDescription(decodePairing(code));
+    await this.peer.setRemoteDescription(decodePairing(code, 'phone'));
     await this.peer.setLocalDescription(await this.peer.createAnswer());
     await waitForIce(this.peer);
-    this.callbacks.onState('Answer ready — return this code to the sending device.');
+    this.callbacks.onState('PC code ready. Return it to the sending phone.');
     return encodePairing(this.peer.localDescription!);
   }
 
   async applyAnswer(code: string): Promise<void> {
-    if (!this.peer) throw new Error('Create a sender code first.');
-    await this.peer.setRemoteDescription(decodePairing(code));
-    this.callbacks.onState('Pairing… keep both screens open.');
+    if (!this.peer) throw new Error('Create a phone code first.');
+    await this.peer.setRemoteDescription(decodePairing(code, 'PC'));
+    this.callbacks.onState('Connecting. Keep both screens open.');
   }
 
   close(): void {
@@ -73,9 +73,9 @@ export class TransferSession {
     const peer = new RTCPeerConnection({ iceServers: [] });
     peer.onconnectionstatechange = () => {
       const state = peer.connectionState;
-      if (state === 'connected') this.callbacks.onState('Encrypted local connection established.');
-      if (state === 'disconnected') this.callbacks.onState('Connection interrupted. Pair again to resume received chunks.');
-      if (state === 'failed') this.callbacks.onError('The devices could not connect. Confirm they are on the same local network, then create fresh pairing codes.');
+      if (state === 'connected') this.callbacks.onState('Encrypted direct connection established.');
+      if (state === 'disconnected') this.callbacks.onState('Connection interrupted. Create fresh codes to resume the transfer.');
+      if (state === 'failed') this.callbacks.onError('The devices could not connect. Put them on the same network, then create fresh codes.');
     };
     return peer;
   }
@@ -84,7 +84,7 @@ export class TransferSession {
     channel.binaryType = 'arraybuffer';
     channel.bufferedAmountLowThreshold = 512 * 1024;
     channel.onopen = () => {
-      this.callbacks.onState('Connected. Comparing the destination before sending…');
+      this.callbacks.onState('Connected. Checking which file parts the PC already has…');
       this.send({ type: 'manifest', manifest: this.manifest! });
     };
     channel.onmessage = (event) => {
@@ -103,7 +103,7 @@ export class TransferSession {
 
   private bindReceiver(channel: RTCDataChannel): void {
     channel.binaryType = 'arraybuffer';
-    channel.onopen = () => this.callbacks.onState('Connected. Waiting for the source manifest…');
+    channel.onopen = () => this.callbacks.onState('Connected. Waiting for the phone file list…');
     channel.onmessage = (event) => {
       this.receiveQueue = this.receiveQueue.then(async () => {
         if (typeof event.data === 'string') await this.receiveControl(JSON.parse(event.data) as WireMessage);
@@ -125,7 +125,7 @@ export class TransferSession {
         resumedBytes += file.size - missing[file.id].reduce((sum, index) => sum + Math.min(CHUNK_SIZE, file.size - index * CHUNK_SIZE), 0);
         this.results.set(file.id, { ...file, receivedBytes: file.size - missing[file.id].reduce((sum, index) => sum + Math.min(CHUNK_SIZE, file.size - index * CHUNK_SIZE), 0), status: 'receiving' });
       }
-      this.callbacks.onProgress(resumedBytes, message.manifest.totalBytes, resumedBytes ? 'Resuming from verified local chunks' : 'Destination is ready');
+      this.callbacks.onProgress(resumedBytes, message.manifest.totalBytes, resumedBytes ? 'Resuming from saved file parts' : 'PC is ready');
       this.send({ type: 'need', missing });
       await this.finalizeCompletedFiles();
     }
@@ -175,7 +175,7 @@ export class TransferSession {
     if (!this.channel || !this.manifest) return;
     const totalMissing = Object.values(missing).reduce((sum, chunks) => sum + chunks.length, 0);
     if (totalMissing === 0) {
-      this.callbacks.onState('The destination already has every chunk; checking hashes.');
+      this.callbacks.onState('The PC already has every file part. Checking the files.');
       return;
     }
     let sent = 0;
@@ -191,7 +191,7 @@ export class TransferSession {
         this.callbacks.onProgress(sent, totalMissing, `Sending ${fileMeta.name}`);
       }
     }
-    this.callbacks.onState('All needed chunks sent. Destination is checking hashes…');
+    this.callbacks.onState('All needed file parts sent. The PC is checking each file.');
   }
 
   private async waitForBuffer(): Promise<void> {

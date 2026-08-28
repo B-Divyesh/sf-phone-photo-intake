@@ -1,75 +1,74 @@
 # Photo Intake Receipt
 
-Photo Intake Receipt is a local-first companion for people moving phone photos to a PC. It sends a deliberately selected batch over an encrypted peer-to-peer WebRTC connection, resumes at saved 64 KiB chunks, compares SHA-256 hashes, and produces an exportable receipt that says exactly what arrived and whether those selected originals are safe to delete.
+Photo Intake Receipt helps people move selected phone photos to a PC. It checks each received copy before deletion.
 
 Live product: <https://phone-photo-intake.sociobot.in>
 
+One-click demo: <https://phone-photo-intake.sociobot.in/demo>
+
 ## What it does
 
-- Pairs two browsers manually without an account, cloud photo upload, STUN server, or relay.
-- Preserves file bytes—including EXIF—without decoding or recompressing media.
-- Saves incoming chunks, completed files, manifests, and receipts to IndexedDB.
-- Resumes a re-paired batch by requesting only chunk indexes absent at the destination.
-- Verifies both source and destination with streaming SHA-256 and issues a locally sealed receipt.
-- Exports every receipt as JSON or CSV; received files can be downloaded from the destination.
-- Works as an installable offline PWA and includes a Capacitor Android project skeleton.
-- Offers a useful free tier of 25 files per batch. A one-time ₹499 Sociobot license unlocks unlimited batch sizes.
+- Connects a sending phone and receiving PC through an encrypted direct WebRTC connection.
+- Uses no public connection relay or photo server.
+- Sends only missing file parts after an interrupted transfer.
+- Keeps original file bytes and embedded photo details unchanged.
+- Checks both copies with SHA-256 and creates a receipt.
+- Saves progress, received files, and receipts in browser device storage.
+- Downloads receipts as JSON or CSV and downloads received files from the PC.
+- Works offline after the first visit.
+- Supports 25 files per free transfer. File checks and receipt downloads need no license.
 
-The safety statement is intentionally narrow: a receipt only covers the files selected in that source batch. It cannot prove that every photo on a phone was selected.
+A receipt covers only files selected on the sending phone. It cannot show that every phone photo was selected.
+
+The demo uses a separate database and never reads or changes real transfer data. See [`.factory/demo.md`](.factory/demo.md).
 
 ## Run and verify
 
-Requires Node.js 20 or newer.
+Use Node.js 20 or newer.
 
 ```sh
-npm install
-npm run dev
+npm ci
 npm test
 npm run build
 npm run test:e2e
 ```
 
-The exact production build command is `npm run build`; deploy the generated `dist/` directory. `npm run test:e2e` builds and serves production output, then checks desktop and 390 px mobile UI, WCAG serious/critical issues, legal routes, real two-peer byte transfer, receipt generation, and offline reload.
+Run `npm run build`, then deploy the generated `dist/` directory. Each public product claim and its command is listed in [`.factory/claims.json`](.factory/claims.json).
 
-To refresh the native shell after web changes:
+## Android project
+
+The repository includes a Capacitor Android project for this product. Copy web changes into it with:
 
 ```sh
 npm run build
 npx cap sync android
 ```
 
-The Android project is in `android/`. With Android SDK API 35 and JDK 21 installed, build and test the debug APK with:
+With Android SDK API 35 and JDK 21 installed, run:
 
 ```sh
-npx cap sync android
 (cd android && ./gradlew test assembleDebug)
 ```
 
-The resulting debug artifact is `android/app/build/outputs/apk/debug/app-debug.apk`. It is intentionally not committed; production signing and distribution remain a factory release step.
+The debug app is written to `android/app/build/outputs/apk/debug/app-debug.apk`. The file is not committed. Release signing happens during deployment.
 
-## How pairing works
+## Connect the phone and PC
 
-1. On the phone/source, select the exact files and create a sender code.
-2. On the PC/destination, choose **Receive photos**, paste that code, and create a receiver code.
-3. Return the receiver code to the source. The peers establish a DTLS-encrypted WebRTC data channel on the local network.
-4. The destination reports saved chunk indexes. Only missing chunks are sent.
-5. The destination assembles original bytes, computes SHA-256, and returns a receipt. Delete phone originals only if the receipt says **Safe to delete this selected batch**.
+1. Open the app on both devices while they share a reachable network.
+2. On the sending phone, choose files and create a phone code.
+3. On the receiving PC, paste the phone code and create a PC code.
+4. Return the PC code to the phone and start the transfer.
+5. Delete only the selected originals named safe in the receipt.
 
-Modern Chromium-based browsers are recommended. Both devices must be able to reach each other on the same local network; guest Wi-Fi client isolation can block direct pairing.
+## Privacy and availability
 
-## Privacy and billing
+The app has no analytics, tracking, external fonts, external scripts, photo server, or user accounts. Local data controls are explained on the [privacy page](https://phone-photo-intake.sociobot.in/privacy/).
 
-There are no analytics, trackers, third-party fonts, runtime CDNs, photo servers, or user accounts. Local data controls are documented at `/privacy/`. Purchases use only the Sociobot billing API; Sociobot/Dodo is the merchant of record, and payment card details never enter this app.
-
-The billing base can be changed for factory staging:
-
-```sh
-VITE_BILLING_BASE=https://pilot-api.sociobot.in npm run build
-```
+Larger transfer licenses are not for sale while checkout is unavailable. The app does not show a dead purchase action.
 
 ## Project notes
 
 - Product brief: [`.factory/brief.json`](.factory/brief.json)
-- Visual system and image provenance: [`.factory/design.md`](.factory/design.md)
+- Visual system and image source: [`.factory/design.md`](.factory/design.md)
 - Build handoff: [`.factory/handoff.md`](.factory/handoff.md)
-- License: MIT
+- License: [MIT](LICENSE)

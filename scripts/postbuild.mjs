@@ -1,9 +1,11 @@
 import { mkdir, copyFile, readFile, readdir, writeFile } from 'node:fs/promises';
 
-for (const route of ['privacy', 'terms']) {
+for (const route of ['demo', 'privacy', 'terms']) {
   await mkdir(new URL(`../dist/${route}/`, import.meta.url), { recursive: true });
   await copyFile(new URL('../dist/index.html', import.meta.url), new URL(`../dist/${route}/index.html`, import.meta.url));
 }
+
+await copyFile(new URL('../dist/index.html', import.meta.url), new URL('../dist/404.html', import.meta.url));
 
 const assetsDirectory = new URL('../dist/assets/', import.meta.url);
 const assets = (await readdir(assetsDirectory))

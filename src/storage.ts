@@ -1,7 +1,17 @@
 import type { BatchManifest, IntakeReceipt } from './types';
 
-const DB_NAME = 'photo-intake-receipt';
+const PRODUCTION_DB_NAME = 'photo-intake-receipt';
+export const DEMO_DB_NAME = 'demo:photo-intake-receipt';
 const DB_VERSION = 1;
+
+export function isDemoMode(): boolean {
+  const query = new URLSearchParams(location.search);
+  return location.pathname.replace(/\/+$/, '') === '/demo' || query.get('demo') === '1';
+}
+
+function databaseName(): string {
+  return isDemoMode() ? DEMO_DB_NAME : PRODUCTION_DB_NAME;
+}
 
 interface StoredChunk { key: string; batchId: string; fileId: string; index: number; blob: Blob }
 export interface StoredFile { key: string; batchId: string; fileId: string; name: string; type: string; blob: Blob }
@@ -23,7 +33,7 @@ function transactionDone(tx: IDBTransaction): Promise<void> {
 
 export function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const opening = indexedDB.open(DB_NAME, DB_VERSION);
+    const opening = indexedDB.open(databaseName(), DB_VERSION);
     opening.onupgradeneeded = () => {
       const db = opening.result;
       const manifests = db.createObjectStore('manifests', { keyPath: 'id' });
@@ -38,6 +48,16 @@ export function openDatabase(): Promise<IDBDatabase> {
     };
     opening.onsuccess = () => resolve(opening.result);
     opening.onerror = () => reject(opening.error ?? new Error('Could not open local storage.'));
+  });
+}
+
+export async function resetDemoDatabase(): Promise<void> {
+  if (!isDemoMode()) throw new Error('Demo data can only be reset from the demo.');
+  await new Promise<void>((resolve, reject) => {
+    const deletion = indexedDB.deleteDatabase(DEMO_DB_NAME);
+    deletion.onsuccess = () => resolve();
+    deletion.onerror = () => reject(deletion.error ?? new Error('Could not reset demo data.'));
+    deletion.onblocked = () => reject(new Error('Close other demo tabs, then reset again.'));
   });
 }
 

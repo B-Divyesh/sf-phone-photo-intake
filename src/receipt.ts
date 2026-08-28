@@ -19,7 +19,7 @@ export async function createReceipt(manifest: BatchManifest, files: FileResult[]
     files,
     seal,
     safeToDelete: destinationCount === manifest.files.length && files.every((file) => file.status === 'verified'),
-    scopeNote: 'This receipt covers only the files selected in this source batch.',
+    scopeNote: 'This receipt covers only the files selected on the sending phone.',
   };
 }
 

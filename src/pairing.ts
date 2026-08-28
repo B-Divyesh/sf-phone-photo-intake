@@ -5,8 +5,8 @@ export function encodePairing(description: RTCSessionDescriptionInit): string {
   return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
-export function decodePairing(value: string): RTCSessionDescriptionInit {
-  const invalid = () => new Error('That sender code is invalid or incomplete. Copy the full code and try again.');
+export function decodePairing(value: string, label: 'phone' | 'PC' = 'phone'): RTCSessionDescriptionInit {
+  const invalid = () => new Error(`That ${label} code is incomplete. Copy the full ${label} code and try again.`);
   try {
     const normalized = value.trim().replaceAll('-', '+').replaceAll('_', '/');
     if (!normalized) throw invalid();

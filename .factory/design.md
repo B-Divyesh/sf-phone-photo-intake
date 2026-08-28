@@ -63,6 +63,11 @@ At 390 px, the wide receipt table becomes stacked file records, action bars wrap
 - `src/assets/hero-blueprint.webp`: original generated editorial still life showing a phone-to-laptop photo intake as a physical blueprint with checked file cards. It explains the transfer/verification relationship rather than acting as filler. Generated with the factory Azure image model (`factory-image`) on 2026-08-28, then reviewed and converted locally to WebP at ≤300 KB.
 - `public/icons/icon.svg`: hand-authored product mark—phone, incoming sheet, and check register—created in this repository, MIT licensed with the product.
 - PWA PNG icons are rendered locally from that SVG; no stock or third-party imagery.
+- `public/og-photo-intake.jpg`: 1200 × 630 social crop composed from the original hero artwork on 2026-08-28. No new third-party material was added.
+
+## Demo and route treatment
+
+The demo keeps the drafting-sheet system and adds one vermilion-edged status strip. Completed sample work receives the green checked stamp; interrupted work uses an ochre paused stamp. The 404 uses a missing-drawing number and a bordered sheet, so error, legal, demo, and working screens remain recognisably part of the same instrument.
 
 ### Image prompt sheet
 
@@ -77,4 +82,3 @@ Lighting/mood: soft desk light, calm, methodical, trustworthy
 Color palette: ivory paper, deep navy ink, faded cyan construction lines, restrained vermilion stamp, muted green verification marks
 Materials/textures: toothy drafting paper, graphite edges, screenprinted ink, tiny registration imperfections
 Constraints: no legible text, no people, no brands, no logos, no watermark; do not imply cloud storage; avoid generic gradient, neon, glassmorphism, and glossy 3D
-

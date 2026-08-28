@@ -8,11 +8,12 @@ describe('manual pairing code', () => {
   });
 
   it('rejects incomplete codes', () => {
-    expect(() => decodePairing('invalid')).toThrow('That sender code is invalid or incomplete. Copy the full code and try again.');
+    expect(() => decodePairing('invalid')).toThrow('That phone code is incomplete. Copy the full phone code and try again.');
+    expect(() => decodePairing('invalid', 'PC')).toThrow('That PC code is incomplete. Copy the full PC code and try again.');
   });
 
   it('does not expose parser details for malformed encoded JSON', () => {
     const malformedJson = btoa('{').replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
-    expect(() => decodePairing(malformedJson)).toThrow('That sender code is invalid or incomplete. Copy the full code and try again.');
+    expect(() => decodePairing(malformedJson)).toThrow('That phone code is incomplete. Copy the full phone code and try again.');
   });
 });
