@@ -18,6 +18,8 @@
 - `npm run build` — passed; `dist/` includes the deployment policy. JS 34.89 kB raw / 12.72 kB gzip, CSS 13.42 kB raw / 3.72 kB gzip, hero 58.46 kB.
 - `npm run test:e2e` — passed in desktop Chromium and Pixel 5 / 390 px projects: keyboard/focus, malformed-code recovery, desktop/mobile layout, axe serious/critical, legal routes, regular peer transfer, offline reload, and the 20-run forced partial-channel interruption campaign.
 - `npx cap sync android` and `ANDROID_HOME=/opt/android-sdk ANDROID_SDK_ROOT=/opt/android-sdk ./android/gradlew -p android test assembleDebug` — passed.
+- Live deployment: `https://phone-photo-intake.sociobot.in` returns HTTP 200 with no Playwright page/console errors, title/lang/one `<h1>`/`<main>`, and no axe serious/critical findings at 390 px. Live `index-BgvAOM4q.js` and `manifest.webmanifest` SHA-256 values match `dist/` exactly.
+- Live response policy: hashed JS returns `Cache-Control: public, max-age=31536000, immutable`; manifest returns `Content-Type: application/manifest+json` and `Cache-Control: no-cache`; CSP, Permissions-Policy, COOP, COEP, HSTS, Referrer-Policy and `nosniff` are present.
 
 Run the same complete gate with:
 
