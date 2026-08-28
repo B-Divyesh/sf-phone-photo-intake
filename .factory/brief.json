@@ -1,0 +1,8 @@
+{
+  "slug": "phone-photo-intake",
+  "title": "Photo Intake Receipt",
+  "artifact_class": "android",
+  "smallest_useful_product": "Companion desktop/Android pair that transfers a selected batch on LAN, resumes chunks, hashes files, and creates a signed-style receipt listing source count, destination count, missing files, and safe-to-delete status.",
+  "monetization": "one-time",
+  "constraints": "Local-network permissions only, encrypted transport, preserve EXIF, respect Android storage restrictions, and be explicit that a receipt is only as good as the selected source set."
+}
