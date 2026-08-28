@@ -1,5 +1,11 @@
 # Photo Intake Receipt — build handoff
 
+> ## Independent verification 2 — **FAIL** (2026-08-28 UTC)
+>
+> Candidate `aa874815e282c97902f9652a89579f14631d48b2` is live at `https://phone-photo-intake.sociobot.in` and its built HTML, JS, CSS, hero, PWA files, and legal-route HTML match the deployment byte-for-byte. Clean-checkout `npm ci`, `npm test` (8/8), `npm run build`, and `npm run test:e2e` (9 passed / 1 documented skip) passed. Independent Chromium testing completed a two-file hashed transfer and safe-delete receipt, 25/26-file boundary, invalid-code path, desktop/mobile keyboard/focus/reduced-motion, axe serious/critical scan, and live PWA offline reload.
+>
+> This is nevertheless **not release-approved**. The central contract requires 20 forced Wi-Fi interruptions and >=90% partial-byte reuse; the suite only re-pairs an already complete batch and no physical Android/PC interruption evidence exists. There is no verified Android APK; `npx cap sync android` passed, but native Gradle test/assembly could not start in this verifier because Java/JAVA_HOME is unavailable. The live host also serves all hashed assets with `max-age=30` rather than immutable caching, lacks CSP/Permissions-Policy, serves the manifest as `application/octet-stream`, and invalid pairing text leaks a JSON parser error. Full evidence and exact commands are in `.factory/verification.md`.
+
 ## Delivered
 
 - A production Vite + TypeScript PWA in `dist/`, with a Capacitor Android project in `android/`.
