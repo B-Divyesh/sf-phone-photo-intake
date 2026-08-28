@@ -10,7 +10,7 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 | Header | Demo | 1 | Pass |
 | Header | Transfer | 1 | Pass |
 | Header | Privacy | 1 | Pass |
-| Hero | Direct photo transfer · sheet 01 | 6 | Pass |
+| Hero | Direct photo transfer | 3 | Pass |
 | Hero | Move phone photos to your PC, then verify | 8 | Pass |
 | Hero | For people who want proof their selected photos arrived before deleting the phone copies. | 14 | Pass |
 | Hero | Try it with sample data | 5 | Pass |
@@ -21,8 +21,8 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 | Hero | Free for 25 files per transfer. | 6 | Pass |
 | Hero art | Selected → transferred → checked | 3 | Pass |
 | Offline | Offline mode. | 2 | Pass |
-| Offline | Saved receipts and direct device connections still work. | 8 | Pass |
-| Workbench | Working drawing · A-01 | 4 | Pass |
+| Offline | Saved receipts remain available to review and download. | 8 | Pass |
+| Workbench | Photo transfer | 2 | Pass |
 | Workbench | Transfer on both devices | 4 | Pass |
 | Workbench | Open this page on the sending phone and receiving PC. | 10 | Pass |
 | Workbench | Choose what this device does. | 5 | Pass |
@@ -59,7 +59,7 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 | Steps | The browser opens an encrypted direct connection. | 7 | Pass |
 | Steps | Check every file. | 3 | Pass |
 | Steps | Interrupted transfers send only missing parts. | 6 | Pass |
-| Steps | A receipt compares each copy with SHA-256. | 7 | Pass |
+| Steps | A receipt checks whether every byte matches. | 7 | Pass |
 | Receipts | Recent receipts | 2 | Pass |
 | Receipts | Saved only on this device. | 5 | Pass |
 | Receipts | Download each receipt as JSON or a spreadsheet-ready CSV. | 9 | Pass |

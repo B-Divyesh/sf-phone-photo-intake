@@ -19,6 +19,8 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
   await expect(page.locator('h1')).toBeFocused();
   await page.goBack();
   await expect(page.locator('h1')).toBeFocused();
+  await page.getByRole('link', { name: 'Transfer my photos' }).click();
+  await expect(page.locator('#workbench-title')).toBeFocused();
 
   for (const route of [
     { path: '/privacy/', title: 'Privacy — Photo Intake Receipt', heading: 'Privacy, drawn plainly' },
@@ -31,12 +33,19 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
     await expect(page.locator('h1')).toHaveText(route.heading);
     await expect(page.locator('header nav')).toBeAttached();
     await expect(page.locator('footer')).toContainText(/Build 1\.0\.1/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://phone-photo-intake.sociobot.in${route.path}`);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', route.title);
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', route.title);
+    await page.reload();
+    await expect(page.locator('h1')).toHaveText(route.heading);
   }
 
   await page.goto('/does-not-exist');
   await expect(page).toHaveTitle('Page not found — Photo Intake Receipt');
   await expect(page.locator('h1')).toHaveText('Page not found');
   await expect(page.getByRole('link', { name: 'Return to the transfer desk' })).toBeVisible();
+  await page.reload();
+  await expect(page.locator('h1')).toHaveText('Page not found');
 });
 
 test('keyboard focus, touch targets, and axe baseline pass', async ({ page }, testInfo) => {
@@ -58,7 +67,8 @@ test('keyboard focus, touch targets, and axe baseline pass', async ({ page }, te
 
   if (testInfo.project.name === 'mobile') {
     await page.goto('/');
-    for (const target of [page.locator('.wordmark'), page.getByRole('link', { name: 'Privacy' }).last(), page.getByRole('link', { name: 'Terms' })]) {
+    await expect(page.locator('.site-header nav')).toBeVisible();
+    for (const target of [page.locator('.wordmark'), ...await page.locator('.site-header nav a, footer nav a').all()]) {
       const box = await target.boundingBox();
       expect(box?.height).toBeGreaterThanOrEqual(44);
     }
@@ -105,6 +115,7 @@ test('@claim:demo-isolation demo is one click, seeded, resettable, and isolated'
   await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Selected phone files are safe to delete' })).toBeVisible();
   await expect(page.getByText('A transfer ready to resume')).toBeVisible();
+  await expect(page.getByText('1 of 4 parts saved')).toBeVisible();
   await expect(page.getByText('7/9 files')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('production-license-sentinel');
   page.once('dialog', (dialog) => dialog.accept());
@@ -115,6 +126,43 @@ test('@claim:demo-isolation demo is one click, seeded, resettable, and isolated'
   await page.getByRole('link', { name: 'Start for real' }).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByText('7/9 files')).toBeVisible();
+});
+
+test('@claim:connection-codes-no-photo-data connection codes contain connection details but no photo data', async ({ page, browser }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', 'Connection-code contents are viewport-independent.');
+  const receiverContext = await demoContext(browser);
+  const receiver = await receiverContext.newPage();
+  try {
+    await page.goto('/demo?transfer=1');
+    await receiver.goto('/demo?transfer=1');
+    const marker = 'PHOTO-BYTES-MUST-NOT-ENTER-CODES';
+    await page.locator('#file-input').setInputFiles({ name: 'IMG_code-boundary.jpg', mimeType: 'image/jpeg', buffer: Buffer.from(marker) });
+    await page.getByRole('button', { name: 'Check files and create phone code' }).click();
+    await expect(page.locator('#offer-code')).not.toHaveValue('', { timeout: 15_000 });
+    const phoneCode = await page.locator('#offer-code').inputValue();
+    await receiver.getByRole('button', { name: 'Receive photos' }).click();
+    await receiver.locator('#offer-input').fill(phoneCode);
+    await receiver.getByRole('button', { name: 'Create PC code' }).click();
+    await expect(receiver.locator('#answer-code')).not.toHaveValue('', { timeout: 15_000 });
+    const pcCode = await receiver.locator('#answer-code').inputValue();
+    for (const code of [phoneCode, pcCode]) {
+      const decoded = Buffer.from(code.replaceAll('-', '+').replaceAll('_', '/'), 'base64').toString('utf8');
+      const value = JSON.parse(decoded) as Record<string, unknown>;
+      expect(Object.keys(value).sort()).toEqual(['sdp', 'type']);
+      expect(decoded).not.toContain(marker);
+      expect(decoded).not.toContain('IMG_code-boundary.jpg');
+    }
+  } finally {
+    await receiverContext.close();
+  }
+});
+
+test('@claim:checkout-unavailable demo exit shows no purchase action while checkout is unavailable', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', 'Checkout availability is viewport-independent.');
+  await page.goto('/demo');
+  await page.getByRole('link', { name: 'Start for real' }).click();
+  await expect(page.getByText('Larger transfers are not for sale while checkout is unavailable.')).toBeVisible();
+  await expect(page.locator('a[href*="checkout"]')).toHaveCount(0);
 });
 
 test('@claim:receipt-exports @claim:checks-free demo exports checked receipt formats without a license', async ({ page }, testInfo) => {
