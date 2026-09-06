@@ -1,15 +1,18 @@
-# Photo Intake Receipt — review 4 handoff
+# Photo Intake Receipt — repair 2 handoff
 
-> **Review 4 update (2026-09-06): FAIL.** The implementation and all 17 tested public claims passed a fresh-clone and live review, but one minor plain-words defect remains: the privacy H1 says “Privacy, drawn plainly” and the 404 has the decorative “Drawing missing” label. The required zero-finding standard is not met. See [review-4.md](review-4.md). No product code changed in this review.
+> **Repair 2 update (2026-09-06): PASS.** `F4-1` is resolved: `/privacy/` now uses the plain H1 “Privacy,” and the 404 no longer has decorative copy. The repair also removes nearby drafting metaphors from route and offline recovery actions. See [repair-2.md](repair-2.md) for the finding matrix and complete verification.
 
-**Reviewed implementation candidate:** `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`<br>
-**Documentation HEAD reviewed:** `b000b0ab9c78600e776d152fd75c77a0db747a6a`
+**Implementation candidate deployed:** `9212ac37fd2e66890504b9ee554fae7fde44940f`<br>
+**Previous documentation/report baseline:** `f3fa41541c86d410c178b33e0650a179b5dc9ad6`<br>
+**Production:** <https://phone-photo-intake.sociobot.in>
 
 ## Current handoff
 
-- `npm ci`, `npm test`, `npm run build`, `npm run test:e2e`, the direct Playwright/axe keyboard check, and all 17 individual claim commands passed from a clean clone.
-- Live phone and desktop review passed the first-screen, demo isolation/reset/exit, transfer, offline, privacy, routes, links, focus, 404, and response-policy checks.
-- The only known gap is `F4-1` in [review-4.md](review-4.md). Replace the themed legal/404 wording with plain labels and add a regression before calling the product PASS.
+- The new outcome-based browser regression verifies the rendered Privacy and 404 routes, direct return actions, and absence of the 404 eyebrow.
+- A fresh clone passed `npm ci`, `npm test` (15 tests), `npm run build`, all 17 individual claim commands, and `npm run test:e2e` (24 collected browser cases; no failures).
+- Live phone and desktop checks passed the first-screen, demo isolation/reset/exit, transfer, offline, privacy, routes, links, focus, designed HTTP 404, and response-policy checks. Live axe has zero violations on all required routes at both widths.
+- Build `1.0.4 · repair 2` advances the service-worker and manifest versions. The deployed runtime matches the candidate files by SHA-256.
+- No known web product gap remains. Lighthouse could not attach to this worker's Playwright headless-shell; that tooling limitation is recorded in [repair-2.md](repair-2.md). Signed APK/device work remains a later Android assignment.
 
 ---
 
