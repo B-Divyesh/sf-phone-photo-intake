@@ -1,5 +1,7 @@
 # Photo Intake Receipt — repair 2 handoff
 
+> **Verification 4 update (2026-09-06): PASS.** Independent verification of deployed implementation `9212ac3` found zero findings and zero untested public claims. A fresh clone passed `npm ci`, 15 unit tests, build, all 17 individual claim commands, the 24-case Playwright suite, and Capacitor sync. Fresh live phone and desktop browser checks confirmed first-screen clarity, the populated isolated demo/reset/exit path, direct transfer, offline reload, routes, links, focus, accessibility, privacy boundary, and the repaired Privacy/404 labels. Production delivery files matched the candidate by SHA-256. See [verification-4.md](verification-4.md). The documentation baseline is `f5b55e6`; it adds reports only and does not change the deployed product image.
+
 > **Repair 2 update (2026-09-06): PASS.** `F4-1` is resolved: `/privacy/` now uses the plain H1 “Privacy,” and the 404 no longer has decorative copy. The repair also removes nearby drafting metaphors from route and offline recovery actions. See [repair-2.md](repair-2.md) for the finding matrix and complete verification.
 
 **Implementation candidate deployed:** `9212ac37fd2e66890504b9ee554fae7fde44940f`<br>
