@@ -3,6 +3,7 @@
 > **Repair 2 update (2026-09-06): PASS.** `F4-1` is resolved: `/privacy/` now uses the plain H1 “Privacy,” and the 404 no longer has decorative copy. The repair also removes nearby drafting metaphors from route and offline recovery actions. See [repair-2.md](repair-2.md) for the finding matrix and complete verification.
 
 **Implementation candidate deployed:** `9212ac37fd2e66890504b9ee554fae7fde44940f`<br>
+**Documentation repair report:** `d4f0a122441a3c8f95d57aa4d16c86c7ed19d83a` (report-only; no new product image)<br>
 **Previous documentation/report baseline:** `f3fa41541c86d410c178b33e0650a179b5dc9ad6`<br>
 **Production:** <https://phone-photo-intake.sociobot.in>
 
