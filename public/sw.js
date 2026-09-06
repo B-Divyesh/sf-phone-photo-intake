@@ -1,4 +1,4 @@
-const VERSION = 'pir-v7';
+const VERSION = 'pir-v8';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const CORE = ['/', '/index.html', '/demo', '/offline.html', '/404.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/apple-touch-icon.png', '/og-photo-intake.jpg', '/privacy/', '/terms/'];

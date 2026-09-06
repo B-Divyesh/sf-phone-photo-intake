@@ -1,4 +1,4 @@
-# Copy audit — polish round 2
+# Copy audit — repair 2
 
 Count method: whitespace-separated words. Hyphenated terms count as one. No item exceeds 22 words or uses a banned marketing word.
 
@@ -88,6 +88,25 @@ Count method: whitespace-separated words. Hyphenated terms count as one. No item
 | Persistence | saved on this device; IndexedDB appears only in privacy and developer notes |
 
 The first screen reads aloud in one breath: move selected phone photos to a PC, try the completed sample, or start a real transfer.
+
+## Legal, error, and offline route audit
+
+| Screen | Exact copy | Words | Result |
+| --- | --- | ---: | --- |
+| Privacy | Effective 28 August 2026 | 4 | Pass |
+| Privacy | Privacy | 1 | Pass; route label names the page directly. |
+| Privacy | Return to photo transfer | 4 | Pass; action names its destination. |
+| Terms | Effective 28 August 2026 | 4 | Pass |
+| Terms | Terms of use | 3 | Pass |
+| Terms | Return to photo transfer | 4 | Pass; action names its destination. |
+| 404 | Page not found | 3 | Pass; no decorative eyebrow is shown. |
+| 404 | This address does not match a transfer, demo, privacy page, or terms page. | 13 | Pass |
+| 404 | Return to photo transfer | 4 | Pass; action names its destination. |
+| Offline | You’re offline | 2 | Pass |
+| Offline | The app stays available after its first load. | 8 | Pass; direct recovery status. |
+| Offline | Reconnect once, reload Photo Intake Receipt, then future transfers and receipts work without the public internet. | 15 | Pass |
+
+Removed after review 4: “Privacy, drawn plainly,” “Drawing missing · 404,” and “Return to the transfer desk.” These labels used drafting language instead of naming the route or action.
 
 ## README re-check
 

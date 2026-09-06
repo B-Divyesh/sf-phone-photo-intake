@@ -27,7 +27,7 @@ try {
   assert.equal(await page.locator('h1').textContent(), 'Move phone photos to your PC, then verify');
   assert.equal(await page.locator('.plain-facts li').count(), 3);
   assert.equal(await page.locator('a[href*="checkout"]').count(), 0);
-  assert.match(await page.locator('footer').innerText(), /Build 1\.0\.3 · polish 2/);
+  assert.match(await page.locator('footer').innerText(), /Build 1\.0\.4 · repair 2/);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), `${base}/`);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth === innerWidth), true);
   await page.screenshot({ path: `${evidenceDirectory}/screenshot-mobile.png`, fullPage: true });
@@ -91,7 +91,7 @@ try {
   for (const expected of [
     ['/', 200, 'Photo Intake Receipt — move and verify phone photos', 'Move phone photos to your PC, then verify'],
     ['/demo', 200, 'Demo — Photo Intake Receipt', 'Review a finished photo transfer'],
-    ['/privacy/', 200, 'Privacy — Photo Intake Receipt', 'Privacy, drawn plainly'],
+    ['/privacy/', 200, 'Privacy — Photo Intake Receipt', 'Privacy'],
     ['/terms/', 200, 'Terms — Photo Intake Receipt', 'Terms of use'],
     ['/missing-page', 404, 'Page not found — Photo Intake Receipt', 'Page not found'],
   ]) {
@@ -102,6 +102,11 @@ try {
     assert.equal(await page.locator('h1').textContent(), expectedHeading);
     assert.equal(await page.locator('main').count(), 1);
     assert.equal(await page.locator('h1').count(), 1);
+    if (path === '/privacy/') await page.getByRole('link', { name: 'Return to photo transfer' }).waitFor();
+    if (path === '/missing-page') {
+      assert.equal(await page.locator('.not-found .eyebrow').count(), 0);
+      await page.getByRole('link', { name: 'Return to photo transfer' }).waitFor();
+    }
     report.routes.push({ path, status: response?.status(), title: await page.title(), heading: expectedHeading });
     if (path === '/missing-page') await page.screenshot({ path: `${evidenceDirectory}/404-mobile.png`, fullPage: true });
   }
@@ -142,7 +147,7 @@ try {
 
   report.checks = {
     firstScreenCopyAndFacts: true,
-    build: '1.0.3 · polish 2',
+    build: '1.0.4 · repair 2',
     demoQueryEntry: true,
     demoIsolationResetAndExit: true,
     routeFocusAndBack: true,

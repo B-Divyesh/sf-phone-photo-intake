@@ -23,7 +23,7 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
   await expect(page.locator('#workbench-title')).toBeFocused();
 
   for (const route of [
-    { path: '/privacy/', title: 'Privacy — Photo Intake Receipt', heading: 'Privacy, drawn plainly' },
+    { path: '/privacy/', title: 'Privacy — Photo Intake Receipt', heading: 'Privacy' },
     { path: '/terms/', title: 'Terms — Photo Intake Receipt', heading: 'Terms of use' },
     { path: '/demo', title: 'Demo — Photo Intake Receipt', heading: 'Review a finished photo transfer' },
   ]) {
@@ -32,7 +32,7 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveText(route.heading);
     await expect(page.locator('header nav')).toBeAttached();
-    await expect(page.locator('footer')).toContainText(/Build 1\.0\.3/);
+    await expect(page.locator('footer')).toContainText(/Build 1\.0\.4/);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://phone-photo-intake.sociobot.in${route.path}`);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', route.title);
     await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', route.title);
@@ -43,9 +43,20 @@ test('landing copy, route metadata, history focus, and designed 404 are complete
   await page.goto('/does-not-exist');
   await expect(page).toHaveTitle('Page not found — Photo Intake Receipt');
   await expect(page.locator('h1')).toHaveText('Page not found');
-  await expect(page.getByRole('link', { name: 'Return to the transfer desk' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Return to photo transfer' })).toBeVisible();
   await page.reload();
   await expect(page.locator('h1')).toHaveText('Page not found');
+});
+
+test('legal and error routes use direct labels and a clear return action', async ({ page }) => {
+  await page.goto('/privacy/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacy');
+  await expect(page.getByRole('link', { name: 'Return to photo transfer' })).toBeVisible();
+
+  await page.goto('/does-not-exist');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Page not found');
+  await expect(page.locator('.not-found .eyebrow')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Return to photo transfer' })).toBeVisible();
 });
 
 test('keyboard focus, touch targets, and axe baseline pass', async ({ page }, testInfo) => {
