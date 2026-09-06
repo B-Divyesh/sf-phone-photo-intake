@@ -1,4 +1,17 @@
-# Photo Intake Receipt — polish round 2 handoff
+# Photo Intake Receipt — review 4 handoff
+
+> **Review 4 update (2026-09-06): FAIL.** The implementation and all 17 tested public claims passed a fresh-clone and live review, but one minor plain-words defect remains: the privacy H1 says “Privacy, drawn plainly” and the 404 has the decorative “Drawing missing” label. The required zero-finding standard is not met. See [review-4.md](review-4.md). No product code changed in this review.
+
+**Reviewed implementation candidate:** `1f121d8f27c3bad8ea244fee462d16d633e7ea0d`<br>
+**Documentation HEAD reviewed:** `b000b0ab9c78600e776d152fd75c77a0db747a6a`
+
+## Current handoff
+
+- `npm ci`, `npm test`, `npm run build`, `npm run test:e2e`, the direct Playwright/axe keyboard check, and all 17 individual claim commands passed from a clean clone.
+- Live phone and desktop review passed the first-screen, demo isolation/reset/exit, transfer, offline, privacy, routes, links, focus, 404, and response-policy checks.
+- The only known gap is `F4-1` in [review-4.md](review-4.md). Replace the themed legal/404 wording with plain labels and add a regression before calling the product PASS.
+
+---
 
 > **Review 3 update (2026-08-28): PASS.** An independent cold mobile/desktop review of `cbcf18042a1b4b43871e745689d4ae565dd2b96c` found zero findings and changed no product code. In fresh clone `/tmp/phone-photo-intake-review-3.gKZTp4`, `npm test`, `npm run build`, and every one of the 17 individually invoked claim commands passed. The live review confirmed first-read clarity, the seeded isolated/offline demo, production-storage isolation, same-origin network behaviour, routes/links/focus/404, and the documented visual identity. Full evidence, the required landing/README sentence audit, historic-finding regression matrix, and verification table are in [review-3.md](review-3.md). No known gap remains; repeat the full review after user-visible, storage, or network changes.
 
