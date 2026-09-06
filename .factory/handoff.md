@@ -1,4 +1,11 @@
-# Photo Intake Receipt — repair 2 handoff
+# Photo Intake Receipt — review 5 handoff
+
+> **Review 5 update (2026-09-06): PASS.** Fresh clean-checkout and live review of implementation `9212ac3` found **0 findings** and **0 untested public claims**. `npm test`, build, all 17 separately invoked claim commands, the 24-case Playwright run (16 active checks and 8 deliberate duplicate skips), and Capacitor sync passed. Fresh phone and desktop contexts confirmed first-screen clarity, the isolated populated demo/reset/exit path, direct transfer, offline reload, routes, links, focus, reduced motion, accessibility, privacy, and the deliberate 404. Live delivery matched all 17 candidate files by SHA-256. See [review-5.md](review-5.md). Documentation baseline: `08bd17a`; it does not change the deployed product image.
+
+## Current review result
+
+- Run again: `npm ci && npm test && npm run build && npm run test:e2e && npx cap sync android`. Run each `test` command in `.factory/claims.json` separately for the full claim audit.
+- No known web product gap remains. The PWA is the assigned deliverable; signed APK build/device verification remains a later Android work order.
 
 > **Verification 4 update (2026-09-06): PASS.** Independent verification of deployed implementation `9212ac3` found zero findings and zero untested public claims. A fresh clone passed `npm ci`, 15 unit tests, build, all 17 individual claim commands, the 24-case Playwright suite, and Capacitor sync. Fresh live phone and desktop browser checks confirmed first-screen clarity, the populated isolated demo/reset/exit path, direct transfer, offline reload, routes, links, focus, accessibility, privacy boundary, and the repaired Privacy/404 labels. Production delivery files matched the candidate by SHA-256. See [verification-4.md](verification-4.md). The documentation baseline is `f5b55e6`; it adds reports only and does not change the deployed product image.
 
